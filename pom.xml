@@ -334,6 +334,19 @@
 			<scope>test</scope>
 		</dependency>
 		<!-- jhipster-needle-maven-add-dependency -->
+		<dependency>
+			<groupId>de.flapdoodle.embed</groupId>
+			<artifactId>de.flapdoodle.embed.mongo</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-mongodb</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.github.mongobee</groupId>
+			<artifactId>mongobee</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -849,7 +862,7 @@
 			</dependencies>
 			<properties>
 				<!-- default Spring profiles -->
-				<spring.profiles.active>dev${profile.tls}${profile.no-liquibase}</spring.profiles.active>
+				<spring.profiles.active>maria${profile.tls}${profile.no-liquibase}</spring.profiles.active>
 			</properties>
 		</profile>
 		<profile>
@@ -867,23 +880,11 @@
 					<artifactId>spring-boot-devtools</artifactId>
 					<optional>true</optional>
 				</dependency>
-				<dependency>
-					<groupId>de.flapdoodle.embed</groupId>
-					<artifactId>de.flapdoodle.embed.mongo</artifactId>
-					<scope>test</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-data-mongodb</artifactId>
-				</dependency>
-				<dependency>
-					<groupId>com.github.mongobee</groupId>
-					<artifactId>mongobee</artifactId>
-				</dependency>
+
 			</dependencies>
 			<properties>
 				<!-- default Spring profiles -->
-				<spring.profiles.active>dev${profile.tls}${profile.no-liquibase}</spring.profiles.active>
+				<spring.profiles.active>mongo${profile.tls}</spring.profiles.active>
 			</properties>
 		</profile>
 		<profile>

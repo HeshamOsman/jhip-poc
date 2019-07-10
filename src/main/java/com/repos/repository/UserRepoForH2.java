@@ -11,7 +11,7 @@ import com.repos.domain.User;
 import io.github.jhipster.config.JHipsterConstants;
 
 @Repository
-@Profile(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT)
+@Profile(JHipsterConstants.SPRING_PROFILE_PRODUCTION)
 public interface UserRepoForH2 extends JpaRepository<User, Long>,usertworepo {
 	@Query("select u from User u where u.id = :i")
     User toFindUserByHisIdentifier(@Param("i") Long i);
