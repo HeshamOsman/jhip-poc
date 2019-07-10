@@ -1,22 +1,18 @@
-package com.repos.repository.sql;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.repos.domain.PersistentAuditEvent;
-//import com.repos.domain.sql.SQLPersistentAuditEvent;
-import com.repos.repository.PersistenceAuditEventRepository;
+package com.repos.repository;
 
 import java.time.Instant;
 import java.util.List;
 
-/**
- * Spring Data JPA repository for the {@link SQLPersistentAuditEvent} entity.
- */
-public interface SQLPersistenceAuditEventRepository extends JpaRepository<PersistentAuditEvent, String>,PersistenceAuditEventRepository {
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.QueryByExampleExecutor;
 
-    List<PersistentAuditEvent> findByPrincipal(String principal);
+import com.repos.domain.Authority;
+import com.repos.domain.PersistentAuditEvent;
+
+public interface PersistenceAuditEventRepository extends PagingAndSortingRepository<PersistentAuditEvent, String>, QueryByExampleExecutor<PersistentAuditEvent> {
+	List<PersistentAuditEvent> findByPrincipal(String principal);
 
     List<PersistentAuditEvent> findByAuditEventDateAfter(Instant after);
 

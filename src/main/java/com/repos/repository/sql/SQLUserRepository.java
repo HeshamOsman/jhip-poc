@@ -12,7 +12,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.repos.domain.User;
-import com.repos.domain.sql.SQLUser;
+//import com.repos.domain.UserI;
+//import com.repos.domain.sql.SQLUser;
 import com.repos.repository.UserRepository;
 
 
@@ -25,7 +26,7 @@ import java.time.Instant;
  */
 @Repository
 @Profile("maria")
-public interface SQLUserRepository extends JpaRepository<SQLUser, Long>,UserRepository<SQLUser>{
+public interface SQLUserRepository extends JpaRepository<User, String>,UserRepository{
 
   
 

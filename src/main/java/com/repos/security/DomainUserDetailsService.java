@@ -1,7 +1,8 @@
 package com.repos.security;
 
 import com.repos.domain.User;
-import com.repos.domain.sql.SQLUser;
+//import com.repos.domain.UserI;
+//import com.repos.domain.sql.SQLUser;
 import com.repos.repository.UserRepository;
 
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;

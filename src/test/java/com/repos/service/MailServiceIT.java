@@ -1,7 +1,8 @@
 package com.repos.service;
 
 import com.repos.config.Constants;
-import com.repos.domain.sql.SQLUser;
+import com.repos.domain.User;
+//import com.repos.domain.sql.SQLUser;
 import com.repos.ReposApp;
 
 import io.github.jhipster.config.JHipsterProperties;
@@ -137,7 +138,7 @@ public class MailServiceIT {
 
     @Test
     public void testSendEmailFromTemplate() throws Exception {
-        SQLUser user = new SQLUser();
+        User user = new User();
         user.setLogin("john");
         user.setEmail("john.doe@example.com");
         user.setLangKey("en");
@@ -153,7 +154,7 @@ public class MailServiceIT {
 
     @Test
     public void testSendActivationEmail() throws Exception {
-        SQLUser user = new SQLUser();
+        User user = new User();
         user.setLangKey(Constants.DEFAULT_LANGUAGE);
         user.setLogin("john");
         user.setEmail("john.doe@example.com");
@@ -168,7 +169,7 @@ public class MailServiceIT {
 
     @Test
     public void testCreationEmail() throws Exception {
-        SQLUser user = new SQLUser();
+        User user = new User();
         user.setLangKey(Constants.DEFAULT_LANGUAGE);
         user.setLogin("john");
         user.setEmail("john.doe@example.com");
@@ -183,7 +184,7 @@ public class MailServiceIT {
 
     @Test
     public void testSendPasswordResetMail() throws Exception {
-        SQLUser user = new SQLUser();
+        User user = new User();
         user.setLangKey(Constants.DEFAULT_LANGUAGE);
         user.setLogin("john");
         user.setEmail("john.doe@example.com");
@@ -204,7 +205,7 @@ public class MailServiceIT {
 
     @Test
     public void testSendLocalizedEmailForAllSupportedLanguages() throws Exception {
-        SQLUser user = new SQLUser();
+        User user = new User();
         user.setLogin("john");
         user.setEmail("john.doe@example.com");
         for (String langKey : languages) {

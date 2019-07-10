@@ -1,7 +1,9 @@
 package com.repos.web.rest;
 
 import com.repos.ReposApp;
-import com.repos.domain.sql.SQLUser;
+import com.repos.domain.User;
+//import com.repos.domain.sql.SQLUser;
+import com.repos.repository.UserRepository;
 import com.repos.repository.sql.SQLUserRepository;
 import com.repos.security.jwt.TokenProvider;
 import com.repos.web.rest.errors.ExceptionTranslator;
@@ -37,7 +39,7 @@ public class UserJWTControllerIT {
     private AuthenticationManagerBuilder authenticationManager;
 
     @Autowired
-    private SQLUserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -58,13 +60,13 @@ public class UserJWTControllerIT {
     @Test
     @Transactional
     public void testAuthorize() throws Exception {
-        SQLUser user = new SQLUser();
+        User user = new User();
         user.setLogin("user-jwt-controller");
         user.setEmail("user-jwt-controller@example.com");
         user.setActivated(true);
         user.setPassword(passwordEncoder.encode("test"));
 
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
 
         LoginVM login = new LoginVM();
         login.setUsername("user-jwt-controller");
@@ -82,13 +84,13 @@ public class UserJWTControllerIT {
     @Test
     @Transactional
     public void testAuthorizeWithRememberMe() throws Exception {
-        SQLUser user = new SQLUser();
+        User user = new User();
         user.setLogin("user-jwt-controller-remember-me");
         user.setEmail("user-jwt-controller-remember-me@example.com");
         user.setActivated(true);
         user.setPassword(passwordEncoder.encode("test"));
 
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
 
         LoginVM login = new LoginVM();
         login.setUsername("user-jwt-controller-remember-me");

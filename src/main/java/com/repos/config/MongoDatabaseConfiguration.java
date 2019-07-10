@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
@@ -26,7 +27,8 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import java.util.ArrayList;
 import java.util.List;
 
-@Profile("mongo")
+//@Profile("mongo")
+@Lazy
 @Configuration
 @EnableMongoRepositories("com.repos.repository.nosql")
 @Import(value = CustomMongoAutoConfiguration.class)

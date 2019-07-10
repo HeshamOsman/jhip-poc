@@ -2,7 +2,9 @@ package com.repos.repository.nosql;
 
 import com.repos.config.Constants;
 import com.repos.config.audit.AuditEventConverter;
-import com.repos.domain.nosql.MongoPersistentAuditEvent;
+//import com.repos.domain.nosql.MongoPersistentAuditEvent;
+import com.repos.domain.PersistentAuditEvent;
+import com.repos.repository.PersistenceAuditEventRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,13 +32,13 @@ public class MongoCustomAuditEventRepository implements AuditEventRepository {
      */
     protected static final int EVENT_DATA_COLUMN_MAX_LENGTH = 255;
 
-    private final MongoPersistenceAuditEventRepository persistenceAuditEventRepository;
+    private final PersistenceAuditEventRepository persistenceAuditEventRepository;
 
     private final AuditEventConverter auditEventConverter;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    public MongoCustomAuditEventRepository(MongoPersistenceAuditEventRepository persistenceAuditEventRepository,
+    public MongoCustomAuditEventRepository(PersistenceAuditEventRepository persistenceAuditEventRepository,
             AuditEventConverter auditEventConverter) {
 
         this.persistenceAuditEventRepository = persistenceAuditEventRepository;
@@ -45,9 +47,9 @@ public class MongoCustomAuditEventRepository implements AuditEventRepository {
 
     @Override
     public List<AuditEvent> find(String principal, Instant after, String type) {
-        Iterable<MongoPersistentAuditEvent> persistentAuditEvents =
+        Iterable<PersistentAuditEvent> persistentAuditEvents =
             persistenceAuditEventRepository.findByPrincipalAndAuditEventDateAfterAndAuditEventType(principal, after, type);
-        return auditEventConverter.convertToAuditEvent2(persistentAuditEvents);
+        return auditEventConverter.convertToAuditEvent(persistentAuditEvents);
     }
 
     @Override
@@ -56,7 +58,7 @@ public class MongoCustomAuditEventRepository implements AuditEventRepository {
         if (!AUTHORIZATION_FAILURE.equals(event.getType()) &&
             !Constants.ANONYMOUS_USER.equals(event.getPrincipal())) {
 
-            MongoPersistentAuditEvent persistentAuditEvent = new MongoPersistentAuditEvent();
+            PersistentAuditEvent persistentAuditEvent = new PersistentAuditEvent();
             persistentAuditEvent.setPrincipal(event.getPrincipal());
             persistentAuditEvent.setAuditEventType(event.getType());
             persistentAuditEvent.setAuditEventDate(event.getTimestamp());

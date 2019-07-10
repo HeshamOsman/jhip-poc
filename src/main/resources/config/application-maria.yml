@@ -37,7 +37,7 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mariadb://localhost:3306/repos?useLegacyDatetimeCode=false&serverTimezone=UTC
-    username: mariauser
+    username: root
     password: 123456
     hikari:
       poolName: Hikari
@@ -70,11 +70,11 @@ spring:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard
   thymeleaf:
     cache: false
-  autoconfigure: 
-    exclude:
-      - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
-      - org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
-      - org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
+#  autoconfigure: 
+#    exclude:
+#      - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
+#      - org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
+#      - org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
 
 server:
   port: 8080

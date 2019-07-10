@@ -6,13 +6,16 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.QueryByExampleExecutor;
 import org.springframework.stereotype.Repository;
 
 import com.repos.domain.User;
-import com.repos.domain.sql.SQLUser;
+//import com.repos.domain.UserI;
+//import com.repos.domain.sql.SQLUser;
 
 @Repository
-public interface UserRepository extends MainRepository<User>{
+public interface UserRepository extends PagingAndSortingRepository<User, String>, QueryByExampleExecutor<User>{
 	
 	String USERS_BY_LOGIN_CACHE = "usersByLogin";
 

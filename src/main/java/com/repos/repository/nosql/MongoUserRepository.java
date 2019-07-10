@@ -9,7 +9,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import com.repos.domain.User;
-import com.repos.domain.nosql.MongoUser;
+//import com.repos.domain.UserI;
+//import com.repos.domain.nosql.MongoUser;
 import com.repos.repository.UserRepository;
 
 import java.util.List;
@@ -21,7 +22,7 @@ import java.time.Instant;
  */
 @Repository
 @Profile("mongo")
-public interface MongoUserRepository extends MongoRepository<MongoUser, String>,UserRepository {
+public interface MongoUserRepository extends MongoRepository<User, String>,UserRepository {
 
 
     Optional<User> findOneByActivationKey(String activationKey);

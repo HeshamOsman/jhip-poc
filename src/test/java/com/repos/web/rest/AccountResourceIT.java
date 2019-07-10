@@ -2,10 +2,10 @@ package com.repos.web.rest;
 
 import com.repos.ReposApp;
 import com.repos.config.Constants;
-import com.repos.domain.sql.SQLAuthority;
-import com.repos.domain.sql.SQLUser;
-import com.repos.repository.sql.SQLAuthorityRepository;
-import com.repos.repository.sql.SQLUserRepository;
+import com.repos.domain.Authority;
+import com.repos.domain.User;
+import com.repos.repository.AuthorityRepository;
+import com.repos.repository.UserRepository;
 import com.repos.security.AuthoritiesConstants;
 import com.repos.service.MailService;
 import com.repos.service.UserService;
@@ -47,10 +47,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AccountResourceIT {
 
     @Autowired
-    private SQLUserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    private SQLAuthorityRepository authorityRepository;
+    private AuthorityRepository authorityRepository;
 
     @Autowired
     private UserService userService;
@@ -114,12 +114,12 @@ public class AccountResourceIT {
 
     @Test
     public void testGetExistingAccount() throws Exception {
-        Set<SQLAuthority> authorities = new HashSet<>();
-        SQLAuthority authority = new SQLAuthority();
+        Set<Authority> authorities = new HashSet<>();
+        Authority authority = new Authority();
         authority.setName(AuthoritiesConstants.ADMIN);
         authorities.add(authority);
 
-        SQLUser user = new SQLUser();
+        User user = new User();
         user.setLogin("test");
         user.setFirstName("john");
         user.setLastName("doe");
@@ -194,7 +194,7 @@ public class AccountResourceIT {
                 .content(TestUtil.convertObjectToJsonBytes(invalidUser)))
             .andExpect(status().isBadRequest());
 
-        Optional<SQLUser> user = userRepository.findOneByEmailIgnoreCase("funky@example.com");
+        Optional<User> user = userRepository.findOneByEmailIgnoreCase("funky@example.com");
         assertThat(user.isPresent()).isFalse();
     }
 
@@ -218,7 +218,7 @@ public class AccountResourceIT {
                 .content(TestUtil.convertObjectToJsonBytes(invalidUser)))
             .andExpect(status().isBadRequest());
 
-        Optional<SQLUser> user = userRepository.findOneByLogin("bob");
+        Optional<User> user = userRepository.findOneByLogin("bob");
         assertThat(user.isPresent()).isFalse();
     }
 
@@ -242,7 +242,7 @@ public class AccountResourceIT {
                 .content(TestUtil.convertObjectToJsonBytes(invalidUser)))
             .andExpect(status().isBadRequest());
 
-        Optional<SQLUser> user = userRepository.findOneByLogin("bob");
+        Optional<User> user = userRepository.findOneByLogin("bob");
         assertThat(user.isPresent()).isFalse();
     }
 
@@ -266,7 +266,7 @@ public class AccountResourceIT {
                 .content(TestUtil.convertObjectToJsonBytes(invalidUser)))
             .andExpect(status().isBadRequest());
 
-        Optional<SQLUser> user = userRepository.findOneByLogin("bob");
+        Optional<User> user = userRepository.findOneByLogin("bob");
         assertThat(user.isPresent()).isFalse();
     }
 
@@ -313,7 +313,7 @@ public class AccountResourceIT {
                 .content(TestUtil.convertObjectToJsonBytes(secondUser)))
             .andExpect(status().isCreated());
 
-        Optional<SQLUser> testUser = userRepository.findOneByEmailIgnoreCase("alice2@example.com");
+        Optional<User> testUser = userRepository.findOneByEmailIgnoreCase("alice2@example.com");
         assertThat(testUser.isPresent()).isTrue();
         testUser.get().setActivated(true);
         userRepository.save(testUser.get());
@@ -347,7 +347,7 @@ public class AccountResourceIT {
                 .content(TestUtil.convertObjectToJsonBytes(firstUser)))
             .andExpect(status().isCreated());
 
-        Optional<SQLUser> testUser1 = userRepository.findOneByLogin("test-register-duplicate-email");
+        Optional<User> testUser1 = userRepository.findOneByLogin("test-register-duplicate-email");
         assertThat(testUser1.isPresent()).isTrue();
 
         // Duplicate email, different login
@@ -368,10 +368,10 @@ public class AccountResourceIT {
                 .content(TestUtil.convertObjectToJsonBytes(secondUser)))
             .andExpect(status().isCreated());
 
-        Optional<SQLUser> testUser2 = userRepository.findOneByLogin("test-register-duplicate-email");
+        Optional<User> testUser2 = userRepository.findOneByLogin("test-register-duplicate-email");
         assertThat(testUser2.isPresent()).isFalse();
 
-        Optional<SQLUser> testUser3 = userRepository.findOneByLogin("test-register-duplicate-email-2");
+        Optional<User> testUser3 = userRepository.findOneByLogin("test-register-duplicate-email-2");
         assertThat(testUser3.isPresent()).isTrue();
 
         // Duplicate email - with uppercase email address
@@ -393,7 +393,7 @@ public class AccountResourceIT {
                 .content(TestUtil.convertObjectToJsonBytes(userWithUpperCaseEmail)))
             .andExpect(status().isCreated());
 
-        Optional<SQLUser> testUser4 = userRepository.findOneByLogin("test-register-duplicate-email-3");
+        Optional<User> testUser4 = userRepository.findOneByLogin("test-register-duplicate-email-3");
         assertThat(testUser4.isPresent()).isTrue();
         assertThat(testUser4.get().getEmail()).isEqualTo("test-register-duplicate-email@example.com");
 
@@ -428,7 +428,7 @@ public class AccountResourceIT {
                 .content(TestUtil.convertObjectToJsonBytes(validUser)))
             .andExpect(status().isCreated());
 
-        Optional<SQLUser> userDup = userRepository.findOneByLogin("badguy");
+        Optional<User> userDup = userRepository.findOneByLogin("badguy");
         assertThat(userDup.isPresent()).isTrue();
         assertThat(userDup.get().getAuthorities()).hasSize(1)
             .containsExactly(authorityRepository.findById(AuthoritiesConstants.USER).get());
@@ -438,14 +438,14 @@ public class AccountResourceIT {
     @Transactional
     public void testActivateAccount() throws Exception {
         final String activationKey = "some activation key";
-        SQLUser user = new SQLUser();
+        User user = new User();
         user.setLogin("activate-account");
         user.setEmail("activate-account@example.com");
         user.setPassword(RandomStringUtils.random(60));
         user.setActivated(false);
         user.setActivationKey(activationKey);
 
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
 
         restMvc.perform(get("/api/activate?key={activationKey}", activationKey))
             .andExpect(status().isOk());
@@ -465,13 +465,13 @@ public class AccountResourceIT {
     @Transactional
     @WithMockUser("save-account")
     public void testSaveAccount() throws Exception {
-        SQLUser user = new SQLUser();
+        User user = new User();
         user.setLogin("save-account");
         user.setEmail("save-account@example.com");
         user.setPassword(RandomStringUtils.random(60));
         user.setActivated(true);
 
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
 
         UserDTO userDTO = new UserDTO();
         userDTO.setLogin("not-used");
@@ -489,7 +489,7 @@ public class AccountResourceIT {
                 .content(TestUtil.convertObjectToJsonBytes(userDTO)))
             .andExpect(status().isOk());
 
-        SQLUser updatedUser = userRepository.findOneByLogin(user.getLogin()).orElse(null);
+        User updatedUser = userRepository.findOneByLogin(user.getLogin()).orElse(null);
         assertThat(updatedUser.getFirstName()).isEqualTo(userDTO.getFirstName());
         assertThat(updatedUser.getLastName()).isEqualTo(userDTO.getLastName());
         assertThat(updatedUser.getEmail()).isEqualTo(userDTO.getEmail());
@@ -504,13 +504,13 @@ public class AccountResourceIT {
     @Transactional
     @WithMockUser("save-invalid-email")
     public void testSaveInvalidEmail() throws Exception {
-        SQLUser user = new SQLUser();
+        User user = new User();
         user.setLogin("save-invalid-email");
         user.setEmail("save-invalid-email@example.com");
         user.setPassword(RandomStringUtils.random(60));
         user.setActivated(true);
 
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
 
         UserDTO userDTO = new UserDTO();
         userDTO.setLogin("not-used");
@@ -535,21 +535,21 @@ public class AccountResourceIT {
     @Transactional
     @WithMockUser("save-existing-email")
     public void testSaveExistingEmail() throws Exception {
-        SQLUser user = new SQLUser();
+        User user = new User();
         user.setLogin("save-existing-email");
         user.setEmail("save-existing-email@example.com");
         user.setPassword(RandomStringUtils.random(60));
         user.setActivated(true);
 
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
 
-        SQLUser anotherUser = new SQLUser();
+        User anotherUser = new User();
         anotherUser.setLogin("save-existing-email2");
         anotherUser.setEmail("save-existing-email2@example.com");
         anotherUser.setPassword(RandomStringUtils.random(60));
         anotherUser.setActivated(true);
 
-        userRepository.saveAndFlush(anotherUser);
+        userRepository.save(anotherUser);
 
         UserDTO userDTO = new UserDTO();
         userDTO.setLogin("not-used");
@@ -567,7 +567,7 @@ public class AccountResourceIT {
                 .content(TestUtil.convertObjectToJsonBytes(userDTO)))
             .andExpect(status().isBadRequest());
 
-        SQLUser updatedUser = userRepository.findOneByLogin("save-existing-email").orElse(null);
+        User updatedUser = userRepository.findOneByLogin("save-existing-email").orElse(null);
         assertThat(updatedUser.getEmail()).isEqualTo("save-existing-email@example.com");
     }
 
@@ -575,13 +575,13 @@ public class AccountResourceIT {
     @Transactional
     @WithMockUser("save-existing-email-and-login")
     public void testSaveExistingEmailAndLogin() throws Exception {
-        SQLUser user = new SQLUser();
+        User user = new User();
         user.setLogin("save-existing-email-and-login");
         user.setEmail("save-existing-email-and-login@example.com");
         user.setPassword(RandomStringUtils.random(60));
         user.setActivated(true);
 
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
 
         UserDTO userDTO = new UserDTO();
         userDTO.setLogin("not-used");
@@ -599,7 +599,7 @@ public class AccountResourceIT {
                 .content(TestUtil.convertObjectToJsonBytes(userDTO)))
             .andExpect(status().isOk());
 
-        SQLUser updatedUser = userRepository.findOneByLogin("save-existing-email-and-login").orElse(null);
+        User updatedUser = userRepository.findOneByLogin("save-existing-email-and-login").orElse(null);
         assertThat(updatedUser.getEmail()).isEqualTo("save-existing-email-and-login@example.com");
     }
 
@@ -607,19 +607,19 @@ public class AccountResourceIT {
     @Transactional
     @WithMockUser("change-password-wrong-existing-password")
     public void testChangePasswordWrongExistingPassword() throws Exception {
-        SQLUser user = new SQLUser();
+        User user = new User();
         String currentPassword = RandomStringUtils.random(60);
         user.setPassword(passwordEncoder.encode(currentPassword));
         user.setLogin("change-password-wrong-existing-password");
         user.setEmail("change-password-wrong-existing-password@example.com");
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
 
         restMvc.perform(post("/api/account/change-password")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(new PasswordChangeDTO("1"+currentPassword, "new password"))))
             .andExpect(status().isBadRequest());
 
-        SQLUser updatedUser = userRepository.findOneByLogin("change-password-wrong-existing-password").orElse(null);
+        User updatedUser = userRepository.findOneByLogin("change-password-wrong-existing-password").orElse(null);
         assertThat(passwordEncoder.matches("new password", updatedUser.getPassword())).isFalse();
         assertThat(passwordEncoder.matches(currentPassword, updatedUser.getPassword())).isTrue();
     }
@@ -628,19 +628,19 @@ public class AccountResourceIT {
     @Transactional
     @WithMockUser("change-password")
     public void testChangePassword() throws Exception {
-        SQLUser user = new SQLUser();
+        User user = new User();
         String currentPassword = RandomStringUtils.random(60);
         user.setPassword(passwordEncoder.encode(currentPassword));
         user.setLogin("change-password");
         user.setEmail("change-password@example.com");
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
 
         restMvc.perform(post("/api/account/change-password")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(new PasswordChangeDTO(currentPassword, "new password"))))
             .andExpect(status().isOk());
 
-        SQLUser updatedUser = userRepository.findOneByLogin("change-password").orElse(null);
+        User updatedUser = userRepository.findOneByLogin("change-password").orElse(null);
         assertThat(passwordEncoder.matches("new password", updatedUser.getPassword())).isTrue();
     }
 
@@ -648,12 +648,12 @@ public class AccountResourceIT {
     @Transactional
     @WithMockUser("change-password-too-small")
     public void testChangePasswordTooSmall() throws Exception {
-        SQLUser user = new SQLUser();
+        User user = new User();
         String currentPassword = RandomStringUtils.random(60);
         user.setPassword(passwordEncoder.encode(currentPassword));
         user.setLogin("change-password-too-small");
         user.setEmail("change-password-too-small@example.com");
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
 
         String newPassword = RandomStringUtils.random(ManagedUserVM.PASSWORD_MIN_LENGTH - 1);
 
@@ -662,7 +662,7 @@ public class AccountResourceIT {
             .content(TestUtil.convertObjectToJsonBytes(new PasswordChangeDTO(currentPassword, newPassword))))
             .andExpect(status().isBadRequest());
 
-        SQLUser updatedUser = userRepository.findOneByLogin("change-password-too-small").orElse(null);
+        User updatedUser = userRepository.findOneByLogin("change-password-too-small").orElse(null);
         assertThat(updatedUser.getPassword()).isEqualTo(user.getPassword());
     }
 
@@ -670,12 +670,12 @@ public class AccountResourceIT {
     @Transactional
     @WithMockUser("change-password-too-long")
     public void testChangePasswordTooLong() throws Exception {
-        SQLUser user = new SQLUser();
+        User user = new User();
         String currentPassword = RandomStringUtils.random(60);
         user.setPassword(passwordEncoder.encode(currentPassword));
         user.setLogin("change-password-too-long");
         user.setEmail("change-password-too-long@example.com");
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
 
         String newPassword = RandomStringUtils.random(ManagedUserVM.PASSWORD_MAX_LENGTH + 1);
 
@@ -684,7 +684,7 @@ public class AccountResourceIT {
             .content(TestUtil.convertObjectToJsonBytes(new PasswordChangeDTO(currentPassword, newPassword))))
             .andExpect(status().isBadRequest());
 
-        SQLUser updatedUser = userRepository.findOneByLogin("change-password-too-long").orElse(null);
+        User updatedUser = userRepository.findOneByLogin("change-password-too-long").orElse(null);
         assertThat(updatedUser.getPassword()).isEqualTo(user.getPassword());
     }
 
@@ -692,31 +692,31 @@ public class AccountResourceIT {
     @Transactional
     @WithMockUser("change-password-empty")
     public void testChangePasswordEmpty() throws Exception {
-        SQLUser user = new SQLUser();
+        User user = new User();
         String currentPassword = RandomStringUtils.random(60);
         user.setPassword(passwordEncoder.encode(currentPassword));
         user.setLogin("change-password-empty");
         user.setEmail("change-password-empty@example.com");
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
 
         restMvc.perform(post("/api/account/change-password")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(new PasswordChangeDTO(currentPassword, ""))))
             .andExpect(status().isBadRequest());
 
-        SQLUser updatedUser = userRepository.findOneByLogin("change-password-empty").orElse(null);
+        User updatedUser = userRepository.findOneByLogin("change-password-empty").orElse(null);
         assertThat(updatedUser.getPassword()).isEqualTo(user.getPassword());
     }
 
     @Test
     @Transactional
     public void testRequestPasswordReset() throws Exception {
-        SQLUser user = new SQLUser();
+        User user = new User();
         user.setPassword(RandomStringUtils.random(60));
         user.setActivated(true);
         user.setLogin("password-reset");
         user.setEmail("password-reset@example.com");
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
 
         restMvc.perform(post("/api/account/reset-password/init")
             .content("password-reset@example.com"))
@@ -726,12 +726,12 @@ public class AccountResourceIT {
     @Test
     @Transactional
     public void testRequestPasswordResetUpperCaseEmail() throws Exception {
-        SQLUser user = new SQLUser();
+        User user = new User();
         user.setPassword(RandomStringUtils.random(60));
         user.setActivated(true);
         user.setLogin("password-reset");
         user.setEmail("password-reset@example.com");
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
 
         restMvc.perform(post("/api/account/reset-password/init")
             .content("password-reset@EXAMPLE.COM"))
@@ -749,13 +749,13 @@ public class AccountResourceIT {
     @Test
     @Transactional
     public void testFinishPasswordReset() throws Exception {
-        SQLUser user = new SQLUser();
+        User user = new User();
         user.setPassword(RandomStringUtils.random(60));
         user.setLogin("finish-password-reset");
         user.setEmail("finish-password-reset@example.com");
         user.setResetDate(Instant.now().plusSeconds(60));
         user.setResetKey("reset key");
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
 
         KeyAndPasswordVM keyAndPassword = new KeyAndPasswordVM();
         keyAndPassword.setKey(user.getResetKey());
@@ -767,20 +767,20 @@ public class AccountResourceIT {
                 .content(TestUtil.convertObjectToJsonBytes(keyAndPassword)))
             .andExpect(status().isOk());
 
-        SQLUser updatedUser = userRepository.findOneByLogin(user.getLogin()).orElse(null);
+        User updatedUser = userRepository.findOneByLogin(user.getLogin()).orElse(null);
         assertThat(passwordEncoder.matches(keyAndPassword.getNewPassword(), updatedUser.getPassword())).isTrue();
     }
 
     @Test
     @Transactional
     public void testFinishPasswordResetTooSmall() throws Exception {
-        SQLUser user = new SQLUser();
+        User user = new User();
         user.setPassword(RandomStringUtils.random(60));
         user.setLogin("finish-password-reset-too-small");
         user.setEmail("finish-password-reset-too-small@example.com");
         user.setResetDate(Instant.now().plusSeconds(60));
         user.setResetKey("reset key too small");
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
 
         KeyAndPasswordVM keyAndPassword = new KeyAndPasswordVM();
         keyAndPassword.setKey(user.getResetKey());
@@ -792,7 +792,7 @@ public class AccountResourceIT {
                 .content(TestUtil.convertObjectToJsonBytes(keyAndPassword)))
             .andExpect(status().isBadRequest());
 
-        SQLUser updatedUser = userRepository.findOneByLogin(user.getLogin()).orElse(null);
+        User updatedUser = userRepository.findOneByLogin(user.getLogin()).orElse(null);
         assertThat(passwordEncoder.matches(keyAndPassword.getNewPassword(), updatedUser.getPassword())).isFalse();
     }
 

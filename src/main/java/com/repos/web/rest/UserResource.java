@@ -1,7 +1,8 @@
 package com.repos.web.rest;
 
 import com.repos.config.Constants;
-import com.repos.domain.sql.SQLUser;
+import com.repos.domain.User;
+//import com.repos.domain.sql.SQLUser;
 import com.repos.repository.sql.SQLUserRepository;
 import com.repos.security.AuthoritiesConstants;
 import com.repos.service.MailService;
@@ -93,7 +94,7 @@ public class UserResource {
      */
     @PostMapping("/users")
     @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<SQLUser> createUser(@Valid @RequestBody UserDTO userDTO) throws URISyntaxException {
+    public ResponseEntity<User> createUser(@Valid @RequestBody UserDTO userDTO) throws URISyntaxException {
         log.debug("REST request to save User : {}", userDTO);
 
         if (userDTO.getId() != null) {
@@ -104,7 +105,7 @@ public class UserResource {
         } else if (userRepository.findOneByEmailIgnoreCase(userDTO.getEmail()).isPresent()) {
             throw new EmailAlreadyUsedException();
         } else {
-            SQLUser newUser = userService.createUser(userDTO);
+            User newUser = userService.createUser(userDTO);
             mailService.sendCreationEmail(newUser);
             return ResponseEntity.created(new URI("/api/users/" + newUser.getLogin()))
                 .headers(HeaderUtil.createAlert(applicationName,  "A user is created with identifier " + newUser.getLogin(), newUser.getLogin()))
@@ -124,7 +125,7 @@ public class UserResource {
     @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO userDTO) {
         log.debug("REST request to update User : {}", userDTO);
-        Optional<SQLUser> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
+        Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
         if (existingUser.isPresent() && (!existingUser.get().getId().equals(userDTO.getId()))) {
             throw new EmailAlreadyUsedException();
         }

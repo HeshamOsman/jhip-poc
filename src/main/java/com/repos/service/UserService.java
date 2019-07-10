@@ -1,7 +1,9 @@
 package com.repos.service;
 
 import com.repos.config.Constants;
+import com.repos.domain.Authority;
 import com.repos.domain.User;
+//import com.repos.domain.UserI;
 import com.repos.repository.AuthorityRepository;
 import com.repos.repository.UserRepository;
 import com.repos.security.AuthoritiesConstants;
@@ -116,7 +118,7 @@ public class UserService {
         newUser.setActivated(false);
         // new user gets registration key
         newUser.setActivationKey(RandomUtil.generateActivationKey());
-        Set<SQLAuthority> authorities = new HashSet<>();
+        Set<Authority> authorities = new HashSet<>();
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
@@ -125,18 +127,18 @@ public class UserService {
         return newUser;
     }
 
-    private boolean removeNonActivatedUser(SQLUser existingUser){
+    private boolean removeNonActivatedUser(User existingUser){
         if (existingUser.getActivated()) {
              return false;
         }
         userRepository.delete(existingUser);
-        userRepository.flush();
+//        userRepository.flush();
         this.clearUserCaches(existingUser);
         return true;
     }
 
-    public SQLUser createUser(UserDTO userDTO) {
-        SQLUser user = new SQLUser();
+    public User createUser(UserDTO userDTO) {
+    	User user = new User();
         user.setLogin(userDTO.getLogin().toLowerCase());
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
@@ -153,7 +155,7 @@ public class UserService {
         user.setResetDate(Instant.now());
         user.setActivated(true);
         if (userDTO.getAuthorities() != null) {
-            Set<SQLAuthority> authorities = userDTO.getAuthorities().stream()
+            Set<Authority> authorities = userDTO.getAuthorities().stream()
                 .map(authorityRepository::findById)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -197,7 +199,7 @@ public class UserService {
      */
     public Optional<UserDTO> updateUser(UserDTO userDTO) {
         return Optional.of(userRepository
-            .findById(userDTO.getId()))
+            .findById(userDTO.getId().toString()))
             .filter(Optional::isPresent)
             .map(Optional::get)
             .map(user -> {
@@ -209,7 +211,7 @@ public class UserService {
                 user.setImageUrl(userDTO.getImageUrl());
                 user.setActivated(userDTO.isActivated());
                 user.setLangKey(userDTO.getLangKey());
-                Set<SQLAuthority> managedAuthorities = user.getAuthorities();
+                Set<Authority> managedAuthorities = user.getAuthorities();
                 managedAuthorities.clear();
                 userDTO.getAuthorities().stream()
                     .map(authorityRepository::findById)
@@ -252,19 +254,19 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<SQLUser> getUserWithAuthoritiesByLogin(String login) {
-        return userRepository.findOneWithAuthoritiesByLogin(login);
+    public Optional<User> getUserWithAuthoritiesByLogin(String login) {
+        return userRepository.findOneByLogin(login);
     }
 
-    @Transactional(readOnly = true)
-    public Optional<SQLUser> getUserWithAuthorities(Long id) {
-        return userRepository.findOneWithAuthoritiesById(id);
-    }
+//    @Transactional(readOnly = true)
+//    public Optional<User> getUserWithAuthorities(Long id) {
+//        return userRepository.findOneById(id);
+//    }
 
     @Transactional(readOnly = true)
-    public Optional<SQLUser> getUserWithAuthorities() {
+    public Optional<User> getUserWithAuthorities() {
     	
-        return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithAuthoritiesByLogin);
+        return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneByLogin);
     }
 
     /**
@@ -290,7 +292,12 @@ public class UserService {
      * @return a list of all the authorities.
      */
     public List<String> getAuthorities() {
-        return authorityRepository.findAll().stream().map(SQLAuthority::getName).collect(Collectors.toList());
+//        return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
+        List<String> authString = new ArrayList<>();
+        for(Authority auth:authorityRepository.findAll()) {
+        	authString.add(auth.getName());
+        }
+        return authString;
     }
 
 

@@ -1,6 +1,7 @@
 package com.repos.service;
 
 import com.repos.config.audit.AuditEventConverter;
+import com.repos.repository.PersistenceAuditEventRepository;
 import com.repos.repository.sql.SQLPersistenceAuditEventRepository;
 
 import org.springframework.boot.actuate.audit.AuditEvent;
@@ -21,12 +22,12 @@ import java.util.Optional;
 @Transactional
 public class AuditEventService {
 
-    private final SQLPersistenceAuditEventRepository persistenceAuditEventRepository;
+    private final PersistenceAuditEventRepository persistenceAuditEventRepository;
 
     private final AuditEventConverter auditEventConverter;
 
     public AuditEventService(
-        SQLPersistenceAuditEventRepository persistenceAuditEventRepository,
+        PersistenceAuditEventRepository persistenceAuditEventRepository,
         AuditEventConverter auditEventConverter) {
 
         this.persistenceAuditEventRepository = persistenceAuditEventRepository;
@@ -44,7 +45,7 @@ public class AuditEventService {
     }
 
     public Optional<AuditEvent> find(Long id) {
-        return Optional.ofNullable(persistenceAuditEventRepository.findById(id))
+        return Optional.ofNullable(persistenceAuditEventRepository.findById(id.toString()))
             .filter(Optional::isPresent)
             .map(Optional::get)
             .map(auditEventConverter::convertToAuditEvent);

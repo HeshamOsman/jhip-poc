@@ -1,7 +1,8 @@
 package com.repos.security;
 
 import com.repos.ReposApp;
-import com.repos.domain.sql.SQLUser;
+import com.repos.domain.User;
+//import com.repos.domain.sql.SQLUser;
 import com.repos.repository.sql.SQLUserRepository;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -39,13 +40,13 @@ public class DomainUserDetailsServiceIT {
     @Autowired
     private UserDetailsService domainUserDetailsService;
 
-    private SQLUser userOne;
-    private SQLUser userTwo;
-    private SQLUser userThree;
+    private User userOne;
+    private User userTwo;
+    private User userThree;
 
     @BeforeEach
     public void init() {
-        userOne = new SQLUser();
+        userOne = new User();
         userOne.setLogin(USER_ONE_LOGIN);
         userOne.setPassword(RandomStringUtils.random(60));
         userOne.setActivated(true);
@@ -55,7 +56,7 @@ public class DomainUserDetailsServiceIT {
         userOne.setLangKey("en");
         userRepository.save(userOne);
 
-        userTwo = new SQLUser();
+        userTwo = new User();
         userTwo.setLogin(USER_TWO_LOGIN);
         userTwo.setPassword(RandomStringUtils.random(60));
         userTwo.setActivated(true);
@@ -65,7 +66,7 @@ public class DomainUserDetailsServiceIT {
         userTwo.setLangKey("en");
         userRepository.save(userTwo);
 
-        userThree = new SQLUser();
+        userThree = new User();
         userThree.setLogin(USER_THREE_LOGIN);
         userThree.setPassword(RandomStringUtils.random(60));
         userThree.setActivated(false);

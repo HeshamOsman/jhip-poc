@@ -1,8 +1,10 @@
 package com.repos.service.dto;
 
 import com.repos.config.Constants;
-import com.repos.domain.sql.SQLAuthority;
-import com.repos.domain.sql.SQLUser;
+import com.repos.domain.Authority;
+import com.repos.domain.User;
+//import com.repos.domain.sql.SQLAuthority;
+//import com.repos.domain.sql.SQLUser;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -56,8 +58,8 @@ public class UserDTO {
         // Empty constructor needed for Jackson.
     }
 
-    public UserDTO(SQLUser user) {
-        this.id = user.getId();
+    public UserDTO(User user) {
+        this.id = Long.parseLong(user.getId()) ;
         this.login = user.getLogin();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
@@ -70,7 +72,7 @@ public class UserDTO {
         this.lastModifiedBy = user.getLastModifiedBy();
         this.lastModifiedDate = user.getLastModifiedDate();
         this.authorities = user.getAuthorities().stream()
-            .map(SQLAuthority::getName)
+            .map(Authority::getName)
             .collect(Collectors.toSet());
     }
 

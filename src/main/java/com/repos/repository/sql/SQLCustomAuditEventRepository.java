@@ -2,7 +2,9 @@ package com.repos.repository.sql;
 
 import com.repos.config.Constants;
 import com.repos.config.audit.AuditEventConverter;
-import com.repos.domain.sql.SQLPersistentAuditEvent;
+import com.repos.domain.PersistentAuditEvent;
+//import com.repos.domain.sql.SQLPersistentAuditEvent;
+import com.repos.repository.PersistenceAuditEventRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,13 +32,13 @@ public class SQLCustomAuditEventRepository implements AuditEventRepository {
      */
     protected static final int EVENT_DATA_COLUMN_MAX_LENGTH = 255;
 
-    private final SQLPersistenceAuditEventRepository persistenceAuditEventRepository;
+    private final PersistenceAuditEventRepository persistenceAuditEventRepository;
 
     private final AuditEventConverter auditEventConverter;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    public SQLCustomAuditEventRepository(SQLPersistenceAuditEventRepository persistenceAuditEventRepository,
+    public SQLCustomAuditEventRepository(PersistenceAuditEventRepository persistenceAuditEventRepository,
             AuditEventConverter auditEventConverter) {
 
         this.persistenceAuditEventRepository = persistenceAuditEventRepository;
@@ -45,7 +47,7 @@ public class SQLCustomAuditEventRepository implements AuditEventRepository {
 
     @Override
     public List<AuditEvent> find(String principal, Instant after, String type) {
-        Iterable<SQLPersistentAuditEvent> persistentAuditEvents =
+        Iterable<PersistentAuditEvent> persistentAuditEvents =
             persistenceAuditEventRepository.findByPrincipalAndAuditEventDateAfterAndAuditEventType(principal, after, type);
         return auditEventConverter.convertToAuditEvent(persistentAuditEvents);
     }
@@ -56,7 +58,7 @@ public class SQLCustomAuditEventRepository implements AuditEventRepository {
         if (!AUTHORIZATION_FAILURE.equals(event.getType()) &&
             !Constants.ANONYMOUS_USER.equals(event.getPrincipal())) {
 
-            SQLPersistentAuditEvent persistentAuditEvent = new SQLPersistentAuditEvent();
+            PersistentAuditEvent persistentAuditEvent = new PersistentAuditEvent();
             persistentAuditEvent.setPrincipal(event.getPrincipal());
             persistentAuditEvent.setAuditEventType(event.getType());
             persistentAuditEvent.setAuditEventDate(event.getTimestamp());

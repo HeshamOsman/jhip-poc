@@ -3,7 +3,8 @@ package com.repos.repository.sql;
 import com.repos.ReposApp;
 import com.repos.config.Constants;
 import com.repos.config.audit.AuditEventConverter;
-import com.repos.domain.sql.SQLPersistentAuditEvent;
+import com.repos.domain.PersistentAuditEvent;
+//import com.repos.domain.sql.PersistentAuditEvent;
 import com.repos.repository.sql.SQLCustomAuditEventRepository;
 import com.repos.repository.sql.SQLPersistenceAuditEventRepository;
 
@@ -42,11 +43,11 @@ public class CustomAuditEventRepositoryIT {
 
     private SQLCustomAuditEventRepository customAuditEventRepository;
 
-    private SQLPersistentAuditEvent testUserEvent;
+    private PersistentAuditEvent testUserEvent;
 
-    private SQLPersistentAuditEvent testOtherUserEvent;
+    private PersistentAuditEvent testOtherUserEvent;
 
-    private SQLPersistentAuditEvent testOldUserEvent;
+    private PersistentAuditEvent testOldUserEvent;
 
     @BeforeEach
     public void setup() {
@@ -54,7 +55,7 @@ public class CustomAuditEventRepositoryIT {
         persistenceAuditEventRepository.deleteAll();
         Instant oneHourAgo = Instant.now().minusSeconds(3600);
 
-        testUserEvent = new SQLPersistentAuditEvent();
+        testUserEvent = new PersistentAuditEvent();
         testUserEvent.setPrincipal("test-user");
         testUserEvent.setAuditEventType("test-type");
         testUserEvent.setAuditEventDate(oneHourAgo);
@@ -62,12 +63,12 @@ public class CustomAuditEventRepositoryIT {
         data.put("test-key", "test-value");
         testUserEvent.setData(data);
 
-        testOldUserEvent = new SQLPersistentAuditEvent();
+        testOldUserEvent = new PersistentAuditEvent();
         testOldUserEvent.setPrincipal("test-user");
         testOldUserEvent.setAuditEventType("test-type");
         testOldUserEvent.setAuditEventDate(oneHourAgo.minusSeconds(10000));
 
-        testOtherUserEvent = new SQLPersistentAuditEvent();
+        testOtherUserEvent = new PersistentAuditEvent();
         testOtherUserEvent.setPrincipal("other-test-user");
         testOtherUserEvent.setAuditEventType("test-type");
         testOtherUserEvent.setAuditEventDate(oneHourAgo);
@@ -79,9 +80,9 @@ public class CustomAuditEventRepositoryIT {
         data.put("test-key", "test-value");
         AuditEvent event = new AuditEvent("test-user", "test-type", data);
         customAuditEventRepository.add(event);
-        List<SQLPersistentAuditEvent> persistentAuditEvents = persistenceAuditEventRepository.findAll();
+        List<PersistentAuditEvent> persistentAuditEvents = persistenceAuditEventRepository.findAll();
         assertThat(persistentAuditEvents).hasSize(1);
-        SQLPersistentAuditEvent persistentAuditEvent = persistentAuditEvents.get(0);
+        PersistentAuditEvent persistentAuditEvent = persistentAuditEvents.get(0);
         assertThat(persistentAuditEvent.getPrincipal()).isEqualTo(event.getPrincipal());
         assertThat(persistentAuditEvent.getAuditEventType()).isEqualTo(event.getType());
         assertThat(persistentAuditEvent.getData()).containsKey("test-key");
@@ -100,9 +101,9 @@ public class CustomAuditEventRepositoryIT {
         data.put("test-key", largeData);
         AuditEvent event = new AuditEvent("test-user", "test-type", data);
         customAuditEventRepository.add(event);
-        List<SQLPersistentAuditEvent> persistentAuditEvents = persistenceAuditEventRepository.findAll();
+        List<PersistentAuditEvent> persistentAuditEvents = persistenceAuditEventRepository.findAll();
         assertThat(persistentAuditEvents).hasSize(1);
-        SQLPersistentAuditEvent persistentAuditEvent = persistentAuditEvents.get(0);
+        PersistentAuditEvent persistentAuditEvent = persistentAuditEvents.get(0);
         assertThat(persistentAuditEvent.getPrincipal()).isEqualTo(event.getPrincipal());
         assertThat(persistentAuditEvent.getAuditEventType()).isEqualTo(event.getType());
         assertThat(persistentAuditEvent.getData()).containsKey("test-key");
@@ -124,9 +125,9 @@ public class CustomAuditEventRepositoryIT {
         data.put("test-key", details);
         AuditEvent event = new AuditEvent("test-user", "test-type", data);
         customAuditEventRepository.add(event);
-        List<SQLPersistentAuditEvent> persistentAuditEvents = persistenceAuditEventRepository.findAll();
+        List<PersistentAuditEvent> persistentAuditEvents = persistenceAuditEventRepository.findAll();
         assertThat(persistentAuditEvents).hasSize(1);
-        SQLPersistentAuditEvent persistentAuditEvent = persistentAuditEvents.get(0);
+        PersistentAuditEvent persistentAuditEvent = persistentAuditEvents.get(0);
         assertThat(persistentAuditEvent.getData().get("remoteAddress")).isEqualTo("1.2.3.4");
         assertThat(persistentAuditEvent.getData().get("sessionId")).isEqualTo("test-session-id");
     }
@@ -137,9 +138,9 @@ public class CustomAuditEventRepositoryIT {
         data.put("test-key", null);
         AuditEvent event = new AuditEvent("test-user", "test-type", data);
         customAuditEventRepository.add(event);
-        List<SQLPersistentAuditEvent> persistentAuditEvents = persistenceAuditEventRepository.findAll();
+        List<PersistentAuditEvent> persistentAuditEvents = persistenceAuditEventRepository.findAll();
         assertThat(persistentAuditEvents).hasSize(1);
-        SQLPersistentAuditEvent persistentAuditEvent = persistentAuditEvents.get(0);
+        PersistentAuditEvent persistentAuditEvent = persistentAuditEvents.get(0);
         assertThat(persistentAuditEvent.getData().get("test-key")).isEqualTo("null");
     }
 
@@ -149,7 +150,7 @@ public class CustomAuditEventRepositoryIT {
         data.put("test-key", "test-value");
         AuditEvent event = new AuditEvent(Constants.ANONYMOUS_USER, "test-type", data);
         customAuditEventRepository.add(event);
-        List<SQLPersistentAuditEvent> persistentAuditEvents = persistenceAuditEventRepository.findAll();
+        List<PersistentAuditEvent> persistentAuditEvents = persistenceAuditEventRepository.findAll();
         assertThat(persistentAuditEvents).hasSize(0);
     }
 
@@ -159,7 +160,7 @@ public class CustomAuditEventRepositoryIT {
         data.put("test-key", "test-value");
         AuditEvent event = new AuditEvent("test-user", "AUTHORIZATION_FAILURE", data);
         customAuditEventRepository.add(event);
-        List<SQLPersistentAuditEvent> persistentAuditEvents = persistenceAuditEventRepository.findAll();
+        List<PersistentAuditEvent> persistentAuditEvents = persistenceAuditEventRepository.findAll();
         assertThat(persistentAuditEvents).hasSize(0);
     }
 
