@@ -21,7 +21,7 @@ logging:
 
 spring:
   profiles:
-    active: dev
+    active: mongo
     include:
       - swagger
       - no-liquibase
@@ -48,7 +48,10 @@ spring:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard
   thymeleaf:
     cache: false
-
+  autoconfigure: 
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
 server:
   port: 8080
 

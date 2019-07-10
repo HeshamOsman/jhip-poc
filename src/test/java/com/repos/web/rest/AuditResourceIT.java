@@ -2,10 +2,10 @@ package com.repos.web.rest;
 
 import com.repos.ReposApp;
 import com.repos.config.audit.AuditEventConverter;
-import com.repos.domain.PersistentAuditEvent;
-import com.repos.repository.PersistenceAuditEventRepository;
-
+import com.repos.domain.sql.PersistentAuditEvent;
+import com.repos.repository.sql.SQLPersistenceAuditEventRepository;
 import com.repos.service.AuditEventService;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -40,7 +40,7 @@ public class AuditResourceIT {
     private static final long SECONDS_PER_DAY = 60 * 60 * 24;
 
     @Autowired
-    private PersistenceAuditEventRepository auditEventRepository;
+    private SQLPersistenceAuditEventRepository auditEventRepository;
 
     @Autowired
     private AuditEventConverter auditEventConverter;

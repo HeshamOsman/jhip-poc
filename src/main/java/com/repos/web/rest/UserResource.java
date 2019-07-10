@@ -1,8 +1,8 @@
 package com.repos.web.rest;
 
 import com.repos.config.Constants;
-import com.repos.domain.User;
-import com.repos.repository.UserRepository;
+import com.repos.domain.sql.User;
+import com.repos.repository.sql.SQLUserRepository;
 import com.repos.security.AuthoritiesConstants;
 import com.repos.service.MailService;
 import com.repos.service.UserService;
@@ -68,11 +68,11 @@ public class UserResource {
 
     private final UserService userService;
 
-    private final UserRepository userRepository;
+    private final SQLUserRepository userRepository;
 
     private final MailService mailService;
 
-    public UserResource(UserService userService, UserRepository userRepository, MailService mailService) {
+    public UserResource(UserService userService, SQLUserRepository userRepository, MailService mailService) {
 
         this.userService = userService;
         this.userRepository = userRepository;

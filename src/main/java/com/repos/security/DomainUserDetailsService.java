@@ -1,7 +1,8 @@
 package com.repos.security;
 
-import com.repos.domain.User;
-import com.repos.repository.UserRepository;
+import com.repos.domain.sql.User;
+import com.repos.repository.sql.SQLUserRepository;
+
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,9 +25,9 @@ public class DomainUserDetailsService implements UserDetailsService {
 
     private final Logger log = LoggerFactory.getLogger(DomainUserDetailsService.class);
 
-    private final UserRepository userRepository;
+    private final SQLUserRepository userRepository;
 
-    public DomainUserDetailsService(UserRepository userRepository) {
+    public DomainUserDetailsService(SQLUserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

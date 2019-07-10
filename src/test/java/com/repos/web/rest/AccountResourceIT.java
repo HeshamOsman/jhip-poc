@@ -2,10 +2,10 @@ package com.repos.web.rest;
 
 import com.repos.ReposApp;
 import com.repos.config.Constants;
-import com.repos.domain.Authority;
-import com.repos.domain.User;
-import com.repos.repository.AuthorityRepository;
-import com.repos.repository.UserRepository;
+import com.repos.domain.sql.Authority;
+import com.repos.domain.sql.User;
+import com.repos.repository.sql.SQLAuthorityRepository;
+import com.repos.repository.sql.SQLUserRepository;
 import com.repos.security.AuthoritiesConstants;
 import com.repos.service.MailService;
 import com.repos.service.UserService;
@@ -47,10 +47,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AccountResourceIT {
 
     @Autowired
-    private UserRepository userRepository;
+    private SQLUserRepository userRepository;
 
     @Autowired
-    private AuthorityRepository authorityRepository;
+    private SQLAuthorityRepository authorityRepository;
 
     @Autowired
     private UserService userService;

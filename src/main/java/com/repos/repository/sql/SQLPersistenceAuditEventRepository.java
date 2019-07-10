@@ -1,9 +1,10 @@
-package com.repos.repository;
+package com.repos.repository.sql;
 
-import com.repos.domain.PersistentAuditEvent;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.repos.domain.sql.PersistentAuditEvent;
 
 import java.time.Instant;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 /**
  * Spring Data JPA repository for the {@link PersistentAuditEvent} entity.
  */
-public interface PersistenceAuditEventRepository extends JpaRepository<PersistentAuditEvent, Long> {
+public interface SQLPersistenceAuditEventRepository extends JpaRepository<PersistentAuditEvent, Long> {
 
     List<PersistentAuditEvent> findByPrincipal(String principal);
 

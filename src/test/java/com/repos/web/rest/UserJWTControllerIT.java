@@ -1,8 +1,8 @@
 package com.repos.web.rest;
 
 import com.repos.ReposApp;
-import com.repos.domain.User;
-import com.repos.repository.UserRepository;
+import com.repos.domain.sql.User;
+import com.repos.repository.sql.SQLUserRepository;
 import com.repos.security.jwt.TokenProvider;
 import com.repos.web.rest.errors.ExceptionTranslator;
 import com.repos.web.rest.vm.LoginVM;
@@ -37,7 +37,7 @@ public class UserJWTControllerIT {
     private AuthenticationManagerBuilder authenticationManager;
 
     @Autowired
-    private UserRepository userRepository;
+    private SQLUserRepository userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;

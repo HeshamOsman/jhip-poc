@@ -1,9 +1,9 @@
 package com.repos.service;
 
 import com.repos.config.Constants;
-
+import com.repos.domain.sql.User;
 import com.repos.ReposApp;
-import com.repos.domain.User;
+
 import io.github.jhipster.config.JHipsterProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

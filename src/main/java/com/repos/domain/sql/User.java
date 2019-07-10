@@ -1,4 +1,4 @@
-package com.repos.domain;
+package com.repos.domain.sql;
 
 import com.repos.config.Constants;
 

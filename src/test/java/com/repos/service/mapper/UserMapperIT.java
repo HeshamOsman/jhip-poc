@@ -2,8 +2,9 @@ package com.repos.service.mapper;
 
 
 import com.repos.ReposApp;
-import com.repos.domain.User;
+import com.repos.domain.sql.User;
 import com.repos.service.dto.UserDTO;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

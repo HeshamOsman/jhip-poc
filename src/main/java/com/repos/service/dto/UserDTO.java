@@ -1,9 +1,8 @@
 package com.repos.service.dto;
 
 import com.repos.config.Constants;
-
-import com.repos.domain.Authority;
-import com.repos.domain.User;
+import com.repos.domain.sql.Authority;
+import com.repos.domain.sql.User;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

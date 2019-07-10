@@ -2,8 +2,8 @@ package com.repos.service;
 
 import com.repos.ReposApp;
 import com.repos.config.Constants;
-import com.repos.domain.User;
-import com.repos.repository.UserRepository;
+import com.repos.domain.sql.User;
+import com.repos.repository.sql.SQLUserRepository;
 import com.repos.service.dto.UserDTO;
 import com.repos.service.util.RandomUtil;
 
@@ -48,7 +48,7 @@ public class UserServiceIT {
     private static final String DEFAULT_LANGKEY = "dummy";
 
     @Autowired
-    private UserRepository userRepository;
+    private SQLUserRepository userRepository;
 
     @Autowired
     private UserService userService;

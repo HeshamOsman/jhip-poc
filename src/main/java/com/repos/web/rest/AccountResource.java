@@ -1,9 +1,9 @@
 package com.repos.web.rest;
 
 
-import com.repos.domain.User;
-import com.repos.repository.UserRepository;
-import com.repos.repository.usertworepo;
+import com.repos.domain.sql.User;
+import com.repos.repository.sql.SQLUserRepository;
+import com.repos.repository.sql.SQLUserTwoRepo;
 import com.repos.security.SecurityUtils;
 import com.repos.service.MailService;
 import com.repos.service.UserService;
@@ -38,12 +38,12 @@ public class AccountResource {
 
     private final Logger log = LoggerFactory.getLogger(AccountResource.class);
 
-    private final UserRepository userRepository;
+    private final SQLUserRepository userRepository;
 
     private final UserService userService;
 
     private final MailService mailService;
-    public AccountResource(UserRepository userRepository,UserService userService, MailService mailService) {
+    public AccountResource(SQLUserRepository userRepository,UserService userService, MailService mailService) {
 
         this.userRepository = userRepository;
         this.userService = userService;

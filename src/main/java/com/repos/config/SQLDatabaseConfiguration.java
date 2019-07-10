@@ -15,8 +15,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.sql.SQLException;
 
+@Profile("maria")
 @Configuration
-@EnableJpaRepositories("com.repos.repository")
+@EnableJpaRepositories("com.repos.repository.sql")
 @EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware")
 @EnableTransactionManagement
 public class SQLDatabaseConfiguration {

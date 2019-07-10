@@ -1,7 +1,5 @@
 package com.repos.service;
 
-import com.repos.domain.User;
-
 import io.github.jhipster.config.JHipsterProperties;
 
 import java.nio.charset.StandardCharsets;
@@ -17,6 +15,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
+
+import com.repos.domain.sql.User;
 
 /**
  * Service for sending emails.

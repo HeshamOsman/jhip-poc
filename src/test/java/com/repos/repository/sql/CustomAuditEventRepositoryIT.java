@@ -1,9 +1,12 @@
-package com.repos.repository;
+package com.repos.repository.sql;
 
 import com.repos.ReposApp;
 import com.repos.config.Constants;
 import com.repos.config.audit.AuditEventConverter;
-import com.repos.domain.PersistentAuditEvent;
+import com.repos.domain.sql.PersistentAuditEvent;
+import com.repos.repository.sql.SQLCustomAuditEventRepository;
+import com.repos.repository.sql.SQLPersistenceAuditEventRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,23 +24,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.repos.repository.sql.SQLCustomAuditEventRepository.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static com.repos.repository.CustomAuditEventRepository.EVENT_DATA_COLUMN_MAX_LENGTH;
 
 /**
- * Integration tests for {@link CustomAuditEventRepository}.
+ * Integration tests for {@link SQLCustomAuditEventRepository}.
  */
 @SpringBootTest(classes = ReposApp.class)
 @Transactional
 public class CustomAuditEventRepositoryIT {
 
     @Autowired
-    private PersistenceAuditEventRepository persistenceAuditEventRepository;
+    private SQLPersistenceAuditEventRepository persistenceAuditEventRepository;
 
     @Autowired
     private AuditEventConverter auditEventConverter;
 
-    private CustomAuditEventRepository customAuditEventRepository;
+    private SQLCustomAuditEventRepository customAuditEventRepository;
 
     private PersistentAuditEvent testUserEvent;
 
@@ -47,7 +50,7 @@ public class CustomAuditEventRepositoryIT {
 
     @BeforeEach
     public void setup() {
-        customAuditEventRepository = new CustomAuditEventRepository(persistenceAuditEventRepository, auditEventConverter);
+        customAuditEventRepository = new SQLCustomAuditEventRepository(persistenceAuditEventRepository, auditEventConverter);
         persistenceAuditEventRepository.deleteAll();
         Instant oneHourAgo = Instant.now().minusSeconds(3600);
 

@@ -1,4 +1,4 @@
-package com.repos.domain;
+package com.repos.domain.sql;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

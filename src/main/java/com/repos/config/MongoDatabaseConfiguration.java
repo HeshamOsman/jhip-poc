@@ -3,6 +3,8 @@ package com.repos.config;
 import io.github.jhipster.config.JHipsterConstants;
 import com.github.mongobee.Mongobee;
 import com.mongodb.MongoClient;
+import com.repos.config.mongo.CustomMongoAutoConfiguration;
+
 import io.github.jhipster.domain.util.JSR310DateConverters.DateToZonedDateTimeConverter;
 import io.github.jhipster.domain.util.JSR310DateConverters.ZonedDateTimeToDateConverter;
 import org.slf4j.Logger;
@@ -24,14 +26,14 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import java.util.ArrayList;
 import java.util.List;
 
+@Profile("mongo")
 @Configuration
-@EnableMongoRepositories("com.mongoapp.repository")
-@Profile("!" + JHipsterConstants.SPRING_PROFILE_CLOUD)
-@Import(value = MongoAutoConfiguration.class)
+@EnableMongoRepositories("com.mongoapp.repository.nosql")
+@Import(value = CustomMongoAutoConfiguration.class)
 @EnableMongoAuditing(auditorAwareRef = "springSecurityAuditorAware")
-public class DatabaseConfiguration {
+public class MongoDatabaseConfiguration {
 
-    private final Logger log = LoggerFactory.getLogger(DatabaseConfiguration.class);
+    private final Logger log = LoggerFactory.getLogger(MongoDatabaseConfiguration.class);
 
     @Bean
     public ValidatingMongoEventListener validatingMongoEventListener() {

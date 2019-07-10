@@ -1,7 +1,8 @@
 package com.repos.service;
 
 import com.repos.config.audit.AuditEventConverter;
-import com.repos.repository.PersistenceAuditEventRepository;
+import com.repos.repository.sql.SQLPersistenceAuditEventRepository;
+
 import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,12 +21,12 @@ import java.util.Optional;
 @Transactional
 public class AuditEventService {
 
-    private final PersistenceAuditEventRepository persistenceAuditEventRepository;
+    private final SQLPersistenceAuditEventRepository persistenceAuditEventRepository;
 
     private final AuditEventConverter auditEventConverter;
 
     public AuditEventService(
-        PersistenceAuditEventRepository persistenceAuditEventRepository,
+        SQLPersistenceAuditEventRepository persistenceAuditEventRepository,
         AuditEventConverter auditEventConverter) {
 
         this.persistenceAuditEventRepository = persistenceAuditEventRepository;

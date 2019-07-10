@@ -1,11 +1,11 @@
 package com.repos.service;
 
 import com.repos.config.Constants;
-import com.repos.domain.Authority;
-import com.repos.domain.User;
-import com.repos.repository.AuthorityRepository;
-import com.repos.repository.UserRepository;
-import com.repos.repository.usertworepo;
+import com.repos.domain.sql.Authority;
+import com.repos.domain.sql.User;
+import com.repos.repository.sql.SQLAuthorityRepository;
+import com.repos.repository.sql.SQLUserRepository;
+import com.repos.repository.sql.SQLUserTwoRepo;
 import com.repos.security.AuthoritiesConstants;
 import com.repos.security.SecurityUtils;
 import com.repos.service.dto.UserDTO;
@@ -36,17 +36,17 @@ public class UserService {
 
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    private final UserRepository userRepository;
+    private final SQLUserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
 
-    private final AuthorityRepository authorityRepository;
-    private usertworepo usertworepo; 
+    private final SQLAuthorityRepository authorityRepository;
+    private SQLUserTwoRepo usertworepo; 
     private final CacheManager cacheManager;
 
-    public UserService(UserRepository userRepository,
-    		usertworepo usertworepo,
-    		PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository, CacheManager cacheManager) {
+    public UserService(SQLUserRepository userRepository,
+    		SQLUserTwoRepo usertworepo,
+    		PasswordEncoder passwordEncoder, SQLAuthorityRepository authorityRepository, CacheManager cacheManager) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
@@ -297,7 +297,7 @@ public class UserService {
 
 
     private void clearUserCaches(User user) {
-        Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE)).evict(user.getLogin());
-        Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE)).evict(user.getEmail());
+        Objects.requireNonNull(cacheManager.getCache(SQLUserRepository.USERS_BY_LOGIN_CACHE)).evict(user.getLogin());
+        Objects.requireNonNull(cacheManager.getCache(SQLUserRepository.USERS_BY_EMAIL_CACHE)).evict(user.getEmail());
     }
 }

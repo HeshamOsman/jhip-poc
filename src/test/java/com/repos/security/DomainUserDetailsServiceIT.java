@@ -1,8 +1,8 @@
 package com.repos.security;
 
 import com.repos.ReposApp;
-import com.repos.domain.User;
-import com.repos.repository.UserRepository;
+import com.repos.domain.sql.User;
+import com.repos.repository.sql.SQLUserRepository;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +34,7 @@ public class DomainUserDetailsServiceIT {
     private static final String USER_THREE_EMAIL = "test-user-three@localhost";
 
     @Autowired
-    private UserRepository userRepository;
+    private SQLUserRepository userRepository;
 
     @Autowired
     private UserDetailsService domainUserDetailsService;

@@ -1,7 +1,10 @@
-package com.repos.domain;
+package com.repos.domain.sql;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashMap;
@@ -14,6 +17,7 @@ import java.util.Map;
  */
 @Entity
 @Table(name = "jhi_persistent_audit_event")
+//@Document(collection = "jhi_persistent_audit_event")
 public class PersistentAuditEvent implements Serializable {
 
     private static final long serialVersionUID = 1L;
