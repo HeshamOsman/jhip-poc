@@ -1,0 +1,37 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.repos"
+    },
+    "jhipsterVersion": "6.1.2",
+    "applicationType": "monolith",
+    "baseName": "repos",
+    "packageName": "com.repos",
+    "packageFolder": "com/repos",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": false,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Memory",
+    "prodDatabaseType": "mariadb",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "MjU5ZGZiNjY1MDZlYmQ1ZDlmZGY0NWMxMjI4ZmY4YTNmMzU2MDk1NWQxMzY4N2RjODY3ODNmZjA4OGNmMWRhMmJjOGNmZDdiNmFjNDFkODNmNmE5Y2RmZjQxZTc3MmU5MjA5YTViYzBmOWZmNjVlMmZjMzBhODVkNzlkZDM5MzM=",
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "skipClient": true,
+    "testFrameworks": [
+      "cucumber"
+    ],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": false
+  }
+}
