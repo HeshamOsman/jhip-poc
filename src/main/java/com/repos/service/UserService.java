@@ -1,11 +1,9 @@
 package com.repos.service;
 
 import com.repos.config.Constants;
-import com.repos.domain.sql.Authority;
-import com.repos.domain.sql.User;
-import com.repos.repository.sql.SQLAuthorityRepository;
-import com.repos.repository.sql.SQLUserRepository;
-import com.repos.repository.sql.SQLUserTwoRepo;
+import com.repos.domain.User;
+import com.repos.repository.AuthorityRepository;
+import com.repos.repository.UserRepository;
 import com.repos.security.AuthoritiesConstants;
 import com.repos.security.SecurityUtils;
 import com.repos.service.dto.UserDTO;
@@ -36,22 +34,22 @@ public class UserService {
 
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    private final SQLUserRepository userRepository;
+    private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
 
-    private final SQLAuthorityRepository authorityRepository;
-    private SQLUserTwoRepo usertworepo; 
+    private final AuthorityRepository authorityRepository;
+//    private UserRepository usertworepo; 
     private final CacheManager cacheManager;
 
-    public UserService(SQLUserRepository userRepository,
-    		SQLUserTwoRepo usertworepo,
-    		PasswordEncoder passwordEncoder, SQLAuthorityRepository authorityRepository, CacheManager cacheManager) {
+    public UserService(UserRepository userRepository,
+//    		UserRepository usertworepo,
+    		PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository, CacheManager cacheManager) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
         this.cacheManager = cacheManager;
-        this.usertworepo = usertworepo;
+//        this.usertworepo = usertworepo;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -118,7 +116,7 @@ public class UserService {
         newUser.setActivated(false);
         // new user gets registration key
         newUser.setActivationKey(RandomUtil.generateActivationKey());
-        Set<Authority> authorities = new HashSet<>();
+        Set<SQLAuthority> authorities = new HashSet<>();
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
@@ -127,7 +125,7 @@ public class UserService {
         return newUser;
     }
 
-    private boolean removeNonActivatedUser(User existingUser){
+    private boolean removeNonActivatedUser(SQLUser existingUser){
         if (existingUser.getActivated()) {
              return false;
         }
@@ -137,8 +135,8 @@ public class UserService {
         return true;
     }
 
-    public User createUser(UserDTO userDTO) {
-        User user = new User();
+    public SQLUser createUser(UserDTO userDTO) {
+        SQLUser user = new SQLUser();
         user.setLogin(userDTO.getLogin().toLowerCase());
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
@@ -155,7 +153,7 @@ public class UserService {
         user.setResetDate(Instant.now());
         user.setActivated(true);
         if (userDTO.getAuthorities() != null) {
-            Set<Authority> authorities = userDTO.getAuthorities().stream()
+            Set<SQLAuthority> authorities = userDTO.getAuthorities().stream()
                 .map(authorityRepository::findById)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -211,7 +209,7 @@ public class UserService {
                 user.setImageUrl(userDTO.getImageUrl());
                 user.setActivated(userDTO.isActivated());
                 user.setLangKey(userDTO.getLangKey());
-                Set<Authority> managedAuthorities = user.getAuthorities();
+                Set<SQLAuthority> managedAuthorities = user.getAuthorities();
                 managedAuthorities.clear();
                 userDTO.getAuthorities().stream()
                     .map(authorityRepository::findById)
@@ -254,17 +252,17 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> getUserWithAuthoritiesByLogin(String login) {
+    public Optional<SQLUser> getUserWithAuthoritiesByLogin(String login) {
         return userRepository.findOneWithAuthoritiesByLogin(login);
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> getUserWithAuthorities(Long id) {
+    public Optional<SQLUser> getUserWithAuthorities(Long id) {
         return userRepository.findOneWithAuthoritiesById(id);
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> getUserWithAuthorities() {
+    public Optional<SQLUser> getUserWithAuthorities() {
     	
         return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithAuthoritiesByLogin);
     }
@@ -276,8 +274,8 @@ public class UserService {
      */
     @Scheduled(cron = "0 0/1 * 1/1 * ?")  //0 0 1 * * ?
     public void removeNotActivatedUsers() {
-     	User u = usertworepo.toFindUserByHisIdentifier(1L);
-    	System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>"+u);
+//     	SQLUser u = usertworepo.toFindUserByHisIdentifier(1L);
+//    	System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>"+u);
         userRepository
             .findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS))
             .forEach(user -> {
@@ -292,12 +290,12 @@ public class UserService {
      * @return a list of all the authorities.
      */
     public List<String> getAuthorities() {
-        return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
+        return authorityRepository.findAll().stream().map(SQLAuthority::getName).collect(Collectors.toList());
     }
 
 
     private void clearUserCaches(User user) {
-        Objects.requireNonNull(cacheManager.getCache(SQLUserRepository.USERS_BY_LOGIN_CACHE)).evict(user.getLogin());
-        Objects.requireNonNull(cacheManager.getCache(SQLUserRepository.USERS_BY_EMAIL_CACHE)).evict(user.getEmail());
+        Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE)).evict(user.getLogin());
+        Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE)).evict(user.getEmail());
     }
 }

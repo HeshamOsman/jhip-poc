@@ -5,6 +5,8 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.repos.domain.PersistentAuditEvent;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashMap;
@@ -18,7 +20,7 @@ import java.util.Map;
 @Entity
 @Table(name = "jhi_persistent_audit_event")
 //@Document(collection = "jhi_persistent_audit_event")
-public class PersistentAuditEvent implements Serializable {
+public class SQLPersistentAuditEvent implements Serializable,PersistentAuditEvent {
 
     private static final long serialVersionUID = 1L;
 
@@ -43,12 +45,16 @@ public class PersistentAuditEvent implements Serializable {
     @CollectionTable(name = "jhi_persistent_audit_evt_data", joinColumns=@JoinColumn(name="event_id"))
     private Map<String, String> data = new HashMap<>();
 
-    public Long getId() {
-        return id;
+//    public Long getId() {
+//        return id;
+//    }
+    
+    public String getId() {
+        return id.toString();
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(String id) {
+    	this.id = Long.parseLong(id) ;
     }
 
     public String getPrincipal() {
@@ -88,10 +94,10 @@ public class PersistentAuditEvent implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof PersistentAuditEvent)) {
+        if (!(o instanceof SQLPersistentAuditEvent)) {
             return false;
         }
-        return id != null && id.equals(((PersistentAuditEvent) o).id);
+        return id != null && id.equals(((SQLPersistentAuditEvent) o).id);
     }
 
     @Override

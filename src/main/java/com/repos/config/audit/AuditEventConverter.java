@@ -4,7 +4,7 @@ import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 
-import com.repos.domain.sql.PersistentAuditEvent;
+import com.repos.domain.sql.SQLPersistentAuditEvent;
 
 import java.util.*;
 
@@ -12,29 +12,48 @@ import java.util.*;
 public class AuditEventConverter {
 
     /**
-     * Convert a list of {@link PersistentAuditEvent}s to a list of {@link AuditEvent}s.
+     * Convert a list of {@link SQLPersistentAuditEvent}s to a list of {@link AuditEvent}s.
      *
      * @param persistentAuditEvents the list to convert.
      * @return the converted list.
      */
-    public List<AuditEvent> convertToAuditEvent(Iterable<PersistentAuditEvent> persistentAuditEvents) {
+    public List<AuditEvent> convertToAuditEvent(Iterable<SQLPersistentAuditEvent> persistentAuditEvents) {
         if (persistentAuditEvents == null) {
             return Collections.emptyList();
         }
         List<AuditEvent> auditEvents = new ArrayList<>();
-        for (PersistentAuditEvent persistentAuditEvent : persistentAuditEvents) {
+        for (SQLPersistentAuditEvent persistentAuditEvent : persistentAuditEvents) {
             auditEvents.add(convertToAuditEvent(persistentAuditEvent));
+        }
+        return auditEvents;
+    }
+    
+    public List<AuditEvent> convertToAuditEvent2(Iterable<com.repos.domain.nosql.MongoPersistentAuditEvent> persistentAuditEvents) {
+        if (persistentAuditEvents == null) {
+            return Collections.emptyList();
+        }
+        List<AuditEvent> auditEvents = new ArrayList<>();
+        for (com.repos.domain.nosql.MongoPersistentAuditEvent persistentAuditEvent : persistentAuditEvents) {
+            auditEvents.add(convertToAuditEvent2(persistentAuditEvent));
         }
         return auditEvents;
     }
 
     /**
-     * Convert a {@link PersistentAuditEvent} to an {@link AuditEvent}.
+     * Convert a {@link SQLPersistentAuditEvent} to an {@link AuditEvent}.
      *
      * @param persistentAuditEvent the event to convert.
      * @return the converted list.
      */
-    public AuditEvent convertToAuditEvent(PersistentAuditEvent persistentAuditEvent) {
+    public AuditEvent convertToAuditEvent(SQLPersistentAuditEvent persistentAuditEvent) {
+        if (persistentAuditEvent == null) {
+            return null;
+        }
+        return new AuditEvent(persistentAuditEvent.getAuditEventDate(), persistentAuditEvent.getPrincipal(),
+            persistentAuditEvent.getAuditEventType(), convertDataToObjects(persistentAuditEvent.getData()));
+    }
+    
+    public AuditEvent convertToAuditEvent2(com.repos.domain.nosql.MongoPersistentAuditEvent persistentAuditEvent) {
         if (persistentAuditEvent == null) {
             return null;
         }

@@ -1,7 +1,8 @@
 package com.repos.domain.sql;
 
 import com.repos.config.Constants;
-
+import com.repos.domain.Authority;
+import com.repos.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.BatchSize;
@@ -22,7 +23,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "jhi_user")
-public class User extends AbstractAuditingEntity implements Serializable {
+public class SQLUser extends SQLAbstractAuditingEntity implements Serializable,User {
 
     private static final long serialVersionUID = 1L;
 
@@ -90,12 +91,16 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @BatchSize(size = 20)
     private Set<Authority> authorities = new HashSet<>();
 
-    public Long getId() {
-        return id;
+//    public Long getId() {
+//        return id;
+//    }
+    
+    public String getId() {
+        return id.toString();
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(String id) {
+        this.id = Long.parseLong(id) ;
     }
 
     public String getLogin() {
@@ -200,10 +205,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof User)) {
+        if (!(o instanceof SQLUser)) {
             return false;
         }
-        return id != null && id.equals(((User) o).id);
+        return id != null && id.equals(((SQLUser) o).id);
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.repos.repository.sql;
 
 import com.repos.config.Constants;
 import com.repos.config.audit.AuditEventConverter;
-import com.repos.domain.sql.PersistentAuditEvent;
+import com.repos.domain.sql.SQLPersistentAuditEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,7 @@ public class SQLCustomAuditEventRepository implements AuditEventRepository {
 
     @Override
     public List<AuditEvent> find(String principal, Instant after, String type) {
-        Iterable<PersistentAuditEvent> persistentAuditEvents =
+        Iterable<SQLPersistentAuditEvent> persistentAuditEvents =
             persistenceAuditEventRepository.findByPrincipalAndAuditEventDateAfterAndAuditEventType(principal, after, type);
         return auditEventConverter.convertToAuditEvent(persistentAuditEvents);
     }
@@ -56,7 +56,7 @@ public class SQLCustomAuditEventRepository implements AuditEventRepository {
         if (!AUTHORIZATION_FAILURE.equals(event.getType()) &&
             !Constants.ANONYMOUS_USER.equals(event.getPrincipal())) {
 
-            PersistentAuditEvent persistentAuditEvent = new PersistentAuditEvent();
+            SQLPersistentAuditEvent persistentAuditEvent = new SQLPersistentAuditEvent();
             persistentAuditEvent.setPrincipal(event.getPrincipal());
             persistentAuditEvent.setAuditEventType(event.getType());
             persistentAuditEvent.setAuditEventDate(event.getTimestamp());

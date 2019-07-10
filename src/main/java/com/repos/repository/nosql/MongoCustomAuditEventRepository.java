@@ -2,7 +2,7 @@ package com.repos.repository.nosql;
 
 import com.repos.config.Constants;
 import com.repos.config.audit.AuditEventConverter;
-import com.repos.domain.sql.PersistentAuditEvent;
+import com.repos.domain.nosql.MongoPersistentAuditEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,7 @@ import java.util.*;
  */
 @Repository
 @Profile("mongo")
-public class CustomAuditEventRepository implements AuditEventRepository {
+public class MongoCustomAuditEventRepository implements AuditEventRepository {
 
     private static final String AUTHORIZATION_FAILURE = "AUTHORIZATION_FAILURE";
 
@@ -30,13 +30,13 @@ public class CustomAuditEventRepository implements AuditEventRepository {
      */
     protected static final int EVENT_DATA_COLUMN_MAX_LENGTH = 255;
 
-    private final PersistenceAuditEventRepository persistenceAuditEventRepository;
+    private final MongoPersistenceAuditEventRepository persistenceAuditEventRepository;
 
     private final AuditEventConverter auditEventConverter;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    public CustomAuditEventRepository(PersistenceAuditEventRepository persistenceAuditEventRepository,
+    public MongoCustomAuditEventRepository(MongoPersistenceAuditEventRepository persistenceAuditEventRepository,
             AuditEventConverter auditEventConverter) {
 
         this.persistenceAuditEventRepository = persistenceAuditEventRepository;
@@ -45,9 +45,9 @@ public class CustomAuditEventRepository implements AuditEventRepository {
 
     @Override
     public List<AuditEvent> find(String principal, Instant after, String type) {
-        Iterable<PersistentAuditEvent> persistentAuditEvents =
+        Iterable<MongoPersistentAuditEvent> persistentAuditEvents =
             persistenceAuditEventRepository.findByPrincipalAndAuditEventDateAfterAndAuditEventType(principal, after, type);
-        return auditEventConverter.convertToAuditEvent(persistentAuditEvents);
+        return auditEventConverter.convertToAuditEvent2(persistentAuditEvents);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class CustomAuditEventRepository implements AuditEventRepository {
         if (!AUTHORIZATION_FAILURE.equals(event.getType()) &&
             !Constants.ANONYMOUS_USER.equals(event.getPrincipal())) {
 
-            PersistentAuditEvent persistentAuditEvent = new PersistentAuditEvent();
+            MongoPersistentAuditEvent persistentAuditEvent = new MongoPersistentAuditEvent();
             persistentAuditEvent.setPrincipal(event.getPrincipal());
             persistentAuditEvent.setAuditEventType(event.getType());
             persistentAuditEvent.setAuditEventDate(event.getTimestamp());

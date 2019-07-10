@@ -1,7 +1,8 @@
 package com.repos.security;
 
-import com.repos.domain.sql.User;
-import com.repos.repository.sql.SQLUserRepository;
+import com.repos.domain.User;
+import com.repos.domain.sql.SQLUser;
+import com.repos.repository.UserRepository;
 
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 import org.slf4j.Logger;
@@ -25,9 +26,9 @@ public class DomainUserDetailsService implements UserDetailsService {
 
     private final Logger log = LoggerFactory.getLogger(DomainUserDetailsService.class);
 
-    private final SQLUserRepository userRepository;
+    private final UserRepository userRepository;
 
-    public DomainUserDetailsService(SQLUserRepository userRepository) {
+    public DomainUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -36,14 +37,24 @@ public class DomainUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(final String login) {
         log.debug("Authenticating {}", login);
 
+//        if (new EmailValidator().isValid(login, null)) {
+//            return userRepository.findOneWithAuthoritiesByEmail(login)
+//                .map(user -> createSpringSecurityUser(login, user))
+//                .orElseThrow(() -> new UsernameNotFoundException("User with email " + login + " was not found in the database"));
+//        }
+//
+//        String lowercaseLogin = login.toLowerCase(Locale.ENGLISH);
+//        return userRepository.findOneWithAuthoritiesByLogin(lowercaseLogin)
+//            .map(user -> createSpringSecurityUser(lowercaseLogin, user))
+//            .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the database"));
         if (new EmailValidator().isValid(login, null)) {
-            return userRepository.findOneWithAuthoritiesByEmail(login)
+            return userRepository.findOneByEmailIgnoreCase(login)
                 .map(user -> createSpringSecurityUser(login, user))
                 .orElseThrow(() -> new UsernameNotFoundException("User with email " + login + " was not found in the database"));
         }
 
         String lowercaseLogin = login.toLowerCase(Locale.ENGLISH);
-        return userRepository.findOneWithAuthoritiesByLogin(lowercaseLogin)
+        return userRepository.findOneByLogin(lowercaseLogin)
             .map(user -> createSpringSecurityUser(lowercaseLogin, user))
             .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the database"));
 

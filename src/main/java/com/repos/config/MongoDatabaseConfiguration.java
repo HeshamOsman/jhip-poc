@@ -28,7 +28,7 @@ import java.util.List;
 
 @Profile("mongo")
 @Configuration
-@EnableMongoRepositories("com.mongoapp.repository.nosql")
+@EnableMongoRepositories("com.repos.repository.nosql")
 @Import(value = CustomMongoAutoConfiguration.class)
 @EnableMongoAuditing(auditorAwareRef = "springSecurityAuditorAware")
 public class MongoDatabaseConfiguration {

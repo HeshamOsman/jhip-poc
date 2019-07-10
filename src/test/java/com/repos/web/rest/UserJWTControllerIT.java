@@ -1,7 +1,7 @@
 package com.repos.web.rest;
 
 import com.repos.ReposApp;
-import com.repos.domain.sql.User;
+import com.repos.domain.sql.SQLUser;
 import com.repos.repository.sql.SQLUserRepository;
 import com.repos.security.jwt.TokenProvider;
 import com.repos.web.rest.errors.ExceptionTranslator;
@@ -58,7 +58,7 @@ public class UserJWTControllerIT {
     @Test
     @Transactional
     public void testAuthorize() throws Exception {
-        User user = new User();
+        SQLUser user = new SQLUser();
         user.setLogin("user-jwt-controller");
         user.setEmail("user-jwt-controller@example.com");
         user.setActivated(true);
@@ -82,7 +82,7 @@ public class UserJWTControllerIT {
     @Test
     @Transactional
     public void testAuthorizeWithRememberMe() throws Exception {
-        User user = new User();
+        SQLUser user = new SQLUser();
         user.setLogin("user-jwt-controller-remember-me");
         user.setEmail("user-jwt-controller-remember-me@example.com");
         user.setActivated(true);

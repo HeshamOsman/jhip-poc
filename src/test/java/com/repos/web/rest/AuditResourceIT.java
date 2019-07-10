@@ -2,7 +2,7 @@ package com.repos.web.rest;
 
 import com.repos.ReposApp;
 import com.repos.config.audit.AuditEventConverter;
-import com.repos.domain.sql.PersistentAuditEvent;
+import com.repos.domain.sql.SQLPersistentAuditEvent;
 import com.repos.repository.sql.SQLPersistenceAuditEventRepository;
 import com.repos.service.AuditEventService;
 
@@ -55,7 +55,7 @@ public class AuditResourceIT {
     @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    private PersistentAuditEvent auditEvent;
+    private SQLPersistentAuditEvent auditEvent;
 
     private MockMvc restAuditMockMvc;
 
@@ -74,7 +74,7 @@ public class AuditResourceIT {
     @BeforeEach
     public void initTest() {
         auditEventRepository.deleteAll();
-        auditEvent = new PersistentAuditEvent();
+        auditEvent = new SQLPersistentAuditEvent();
         auditEvent.setAuditEventType(SAMPLE_TYPE);
         auditEvent.setPrincipal(SAMPLE_PRINCIPAL);
         auditEvent.setAuditEventDate(SAMPLE_TIMESTAMP);
@@ -146,10 +146,10 @@ public class AuditResourceIT {
     @Test
     @Transactional
     public void testPersistentAuditEventEquals() throws Exception {
-        TestUtil.equalsVerifier(PersistentAuditEvent.class);
-        PersistentAuditEvent auditEvent1 = new PersistentAuditEvent();
+        TestUtil.equalsVerifier(SQLPersistentAuditEvent.class);
+        SQLPersistentAuditEvent auditEvent1 = new SQLPersistentAuditEvent();
         auditEvent1.setId(1L);
-        PersistentAuditEvent auditEvent2 = new PersistentAuditEvent();
+        SQLPersistentAuditEvent auditEvent2 = new SQLPersistentAuditEvent();
         auditEvent2.setId(auditEvent1.getId());
         assertThat(auditEvent1).isEqualTo(auditEvent2);
         auditEvent2.setId(2L);

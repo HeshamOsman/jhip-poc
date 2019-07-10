@@ -1,8 +1,8 @@
 package com.repos.web.rest;
 
 import com.repos.ReposApp;
-import com.repos.domain.sql.Authority;
-import com.repos.domain.sql.User;
+import com.repos.domain.sql.SQLAuthority;
+import com.repos.domain.sql.SQLUser;
 import com.repos.repository.sql.SQLUserRepository;
 import com.repos.security.AuthoritiesConstants;
 import com.repos.service.MailService;
@@ -92,7 +92,7 @@ public class UserResourceIT {
 
     private MockMvc restUserMockMvc;
 
-    private User user;
+    private SQLUser user;
 
     @BeforeEach
     public void setup() {
@@ -113,8 +113,8 @@ public class UserResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which has a required relationship to the User entity.
      */
-    public static User createEntity(EntityManager em) {
-        User user = new User();
+    public static SQLUser createEntity(EntityManager em) {
+        SQLUser user = new SQLUser();
         user.setLogin(DEFAULT_LOGIN + RandomStringUtils.randomAlphabetic(5));
         user.setPassword(RandomStringUtils.random(60));
         user.setActivated(true);
@@ -156,9 +156,9 @@ public class UserResourceIT {
             .andExpect(status().isCreated());
 
         // Validate the User in the database
-        List<User> userList = userRepository.findAll();
+        List<SQLUser> userList = userRepository.findAll();
         assertThat(userList).hasSize(databaseSizeBeforeCreate + 1);
-        User testUser = userList.get(userList.size() - 1);
+        SQLUser testUser = userList.get(userList.size() - 1);
         assertThat(testUser.getLogin()).isEqualTo(DEFAULT_LOGIN);
         assertThat(testUser.getFirstName()).isEqualTo(DEFAULT_FIRSTNAME);
         assertThat(testUser.getLastName()).isEqualTo(DEFAULT_LASTNAME);
@@ -191,7 +191,7 @@ public class UserResourceIT {
             .andExpect(status().isBadRequest());
 
         // Validate the User in the database
-        List<User> userList = userRepository.findAll();
+        List<SQLUser> userList = userRepository.findAll();
         assertThat(userList).hasSize(databaseSizeBeforeCreate);
     }
 
@@ -220,7 +220,7 @@ public class UserResourceIT {
             .andExpect(status().isBadRequest());
 
         // Validate the User in the database
-        List<User> userList = userRepository.findAll();
+        List<SQLUser> userList = userRepository.findAll();
         assertThat(userList).hasSize(databaseSizeBeforeCreate);
     }
 
@@ -249,7 +249,7 @@ public class UserResourceIT {
             .andExpect(status().isBadRequest());
 
         // Validate the User in the database
-        List<User> userList = userRepository.findAll();
+        List<SQLUser> userList = userRepository.findAll();
         assertThat(userList).hasSize(databaseSizeBeforeCreate);
     }
 
@@ -309,7 +309,7 @@ public class UserResourceIT {
         int databaseSizeBeforeUpdate = userRepository.findAll().size();
 
         // Update the user
-        User updatedUser = userRepository.findById(user.getId()).get();
+        SQLUser updatedUser = userRepository.findById(user.getId()).get();
 
         ManagedUserVM managedUserVM = new ManagedUserVM();
         managedUserVM.setId(updatedUser.getId());
@@ -333,9 +333,9 @@ public class UserResourceIT {
             .andExpect(status().isOk());
 
         // Validate the User in the database
-        List<User> userList = userRepository.findAll();
+        List<SQLUser> userList = userRepository.findAll();
         assertThat(userList).hasSize(databaseSizeBeforeUpdate);
-        User testUser = userList.get(userList.size() - 1);
+        SQLUser testUser = userList.get(userList.size() - 1);
         assertThat(testUser.getFirstName()).isEqualTo(UPDATED_FIRSTNAME);
         assertThat(testUser.getLastName()).isEqualTo(UPDATED_LASTNAME);
         assertThat(testUser.getEmail()).isEqualTo(UPDATED_EMAIL);
@@ -351,7 +351,7 @@ public class UserResourceIT {
         int databaseSizeBeforeUpdate = userRepository.findAll().size();
 
         // Update the user
-        User updatedUser = userRepository.findById(user.getId()).get();
+        SQLUser updatedUser = userRepository.findById(user.getId()).get();
 
         ManagedUserVM managedUserVM = new ManagedUserVM();
         managedUserVM.setId(updatedUser.getId());
@@ -375,9 +375,9 @@ public class UserResourceIT {
             .andExpect(status().isOk());
 
         // Validate the User in the database
-        List<User> userList = userRepository.findAll();
+        List<SQLUser> userList = userRepository.findAll();
         assertThat(userList).hasSize(databaseSizeBeforeUpdate);
-        User testUser = userList.get(userList.size() - 1);
+        SQLUser testUser = userList.get(userList.size() - 1);
         assertThat(testUser.getLogin()).isEqualTo(UPDATED_LOGIN);
         assertThat(testUser.getFirstName()).isEqualTo(UPDATED_FIRSTNAME);
         assertThat(testUser.getLastName()).isEqualTo(UPDATED_LASTNAME);
@@ -392,7 +392,7 @@ public class UserResourceIT {
         // Initialize the database with 2 users
         userRepository.saveAndFlush(user);
 
-        User anotherUser = new User();
+        SQLUser anotherUser = new SQLUser();
         anotherUser.setLogin("jhipster");
         anotherUser.setPassword(RandomStringUtils.random(60));
         anotherUser.setActivated(true);
@@ -404,7 +404,7 @@ public class UserResourceIT {
         userRepository.saveAndFlush(anotherUser);
 
         // Update the user
-        User updatedUser = userRepository.findById(user.getId()).get();
+        SQLUser updatedUser = userRepository.findById(user.getId()).get();
 
         ManagedUserVM managedUserVM = new ManagedUserVM();
         managedUserVM.setId(updatedUser.getId());
@@ -434,7 +434,7 @@ public class UserResourceIT {
         // Initialize the database
         userRepository.saveAndFlush(user);
 
-        User anotherUser = new User();
+        SQLUser anotherUser = new SQLUser();
         anotherUser.setLogin("jhipster");
         anotherUser.setPassword(RandomStringUtils.random(60));
         anotherUser.setActivated(true);
@@ -446,7 +446,7 @@ public class UserResourceIT {
         userRepository.saveAndFlush(anotherUser);
 
         // Update the user
-        User updatedUser = userRepository.findById(user.getId()).get();
+        SQLUser updatedUser = userRepository.findById(user.getId()).get();
 
         ManagedUserVM managedUserVM = new ManagedUserVM();
         managedUserVM.setId(updatedUser.getId());
@@ -485,7 +485,7 @@ public class UserResourceIT {
         assertThat(cacheManager.getCache(SQLUserRepository.USERS_BY_LOGIN_CACHE).get(user.getLogin())).isNull();
 
         // Validate the database is empty
-        List<User> userList = userRepository.findAll();
+        List<SQLUser> userList = userRepository.findAll();
         assertThat(userList).hasSize(databaseSizeBeforeDelete - 1);
     }
 
@@ -504,10 +504,10 @@ public class UserResourceIT {
     @Test
     @Transactional
     public void testUserEquals() throws Exception {
-        TestUtil.equalsVerifier(User.class);
-        User user1 = new User();
+        TestUtil.equalsVerifier(SQLUser.class);
+        SQLUser user1 = new SQLUser();
         user1.setId(1L);
-        User user2 = new User();
+        SQLUser user2 = new SQLUser();
         user2.setId(user1.getId());
         assertThat(user1).isEqualTo(user2);
         user2.setId(2L);
@@ -531,7 +531,7 @@ public class UserResourceIT {
         userDTO.setLastModifiedBy(DEFAULT_LOGIN);
         userDTO.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
 
-        User user = userMapper.userDTOToUser(userDTO);
+        SQLUser user = userMapper.userDTOToUser(userDTO);
         assertThat(user.getId()).isEqualTo(DEFAULT_ID);
         assertThat(user.getLogin()).isEqualTo(DEFAULT_LOGIN);
         assertThat(user.getFirstName()).isEqualTo(DEFAULT_FIRSTNAME);
@@ -554,8 +554,8 @@ public class UserResourceIT {
         user.setCreatedDate(Instant.now());
         user.setLastModifiedBy(DEFAULT_LOGIN);
         user.setLastModifiedDate(Instant.now());
-        Set<Authority> authorities = new HashSet<>();
-        Authority authority = new Authority();
+        Set<SQLAuthority> authorities = new HashSet<>();
+        SQLAuthority authority = new SQLAuthority();
         authority.setName(AuthoritiesConstants.USER);
         authorities.add(authority);
         user.setAuthorities(authorities);
@@ -580,14 +580,14 @@ public class UserResourceIT {
 
     @Test
     public void testAuthorityEquals() {
-        Authority authorityA = new Authority();
+        SQLAuthority authorityA = new SQLAuthority();
         assertThat(authorityA).isEqualTo(authorityA);
         assertThat(authorityA).isNotEqualTo(null);
         assertThat(authorityA).isNotEqualTo(new Object());
         assertThat(authorityA.hashCode()).isEqualTo(0);
         assertThat(authorityA.toString()).isNotNull();
 
-        Authority authorityB = new Authority();
+        SQLAuthority authorityB = new SQLAuthority();
         assertThat(authorityA).isEqualTo(authorityB);
 
         authorityB.setName(AuthoritiesConstants.ADMIN);

@@ -2,7 +2,7 @@ package com.repos.service.mapper;
 
 
 import com.repos.ReposApp;
-import com.repos.domain.sql.User;
+import com.repos.domain.sql.SQLUser;
 import com.repos.service.dto.UserDTO;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -30,12 +30,12 @@ public class UserMapperIT {
     @Autowired
     private UserMapper userMapper;
 
-    private User user;
+    private SQLUser user;
     private UserDTO userDto;
 
     @BeforeEach
     public void init() {
-        user = new User();
+        user = new SQLUser();
         user.setLogin(DEFAULT_LOGIN);
         user.setPassword(RandomStringUtils.random(60));
         user.setActivated(true);
@@ -50,7 +50,7 @@ public class UserMapperIT {
 
     @Test
     public void usersToUserDTOsShouldMapOnlyNonNullUsers() {
-        List<User> users = new ArrayList<>();
+        List<SQLUser> users = new ArrayList<>();
         users.add(user);
         users.add(null);
 
@@ -66,7 +66,7 @@ public class UserMapperIT {
         usersDto.add(userDto);
         usersDto.add(null);
 
-        List<User> users = userMapper.userDTOsToUsers(usersDto);
+        List<SQLUser> users = userMapper.userDTOsToUsers(usersDto);
 
         assertThat(users).isNotEmpty();
         assertThat(users).size().isEqualTo(1);
@@ -81,7 +81,7 @@ public class UserMapperIT {
         List<UserDTO> usersDto = new ArrayList<>();
         usersDto.add(userDto);
 
-        List<User> users = userMapper.userDTOsToUsers(usersDto);
+        List<SQLUser> users = userMapper.userDTOsToUsers(usersDto);
 
         assertThat(users).isNotEmpty();
         assertThat(users).size().isEqualTo(1);
@@ -97,7 +97,7 @@ public class UserMapperIT {
         List<UserDTO> usersDto = new ArrayList<>();
         usersDto.add(userDto);
 
-        List<User> users = userMapper.userDTOsToUsers(usersDto);
+        List<SQLUser> users = userMapper.userDTOsToUsers(usersDto);
 
         assertThat(users).isNotEmpty();
         assertThat(users).size().isEqualTo(1);
@@ -111,7 +111,7 @@ public class UserMapperIT {
         authoritiesAsString.add("ADMIN");
         userDto.setAuthorities(authoritiesAsString);
 
-        User user = userMapper.userDTOToUser(userDto);
+        SQLUser user = userMapper.userDTOToUser(userDto);
 
         assertThat(user).isNotNull();
         assertThat(user.getAuthorities()).isNotNull();
@@ -123,7 +123,7 @@ public class UserMapperIT {
     public void userDTOToUserMapWithNullAuthoritiesStringShouldReturnUserWithEmptyAuthorities() {
         userDto.setAuthorities(null);
 
-        User user = userMapper.userDTOToUser(userDto);
+        SQLUser user = userMapper.userDTOToUser(userDto);
 
         assertThat(user).isNotNull();
         assertThat(user.getAuthorities()).isNotNull();

@@ -1,6 +1,7 @@
 package com.repos.repository.sql;
 
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 
 import org.springframework.data.domain.Pageable;
@@ -10,21 +11,23 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.repos.domain.sql.User;
+import com.repos.domain.User;
+import com.repos.domain.sql.SQLUser;
+import com.repos.repository.UserRepository;
+
 
 import java.util.List;
 import java.util.Optional;
 import java.time.Instant;
 
 /**
- * Spring Data JPA repository for the {@link User} entity.
+ * Spring Data JPA repository for the {@link SQLUser} entity.
  */
 @Repository
-public interface SQLUserRepository extends JpaRepository<User, Long>{
+@Profile("maria")
+public interface SQLUserRepository extends JpaRepository<SQLUser, Long>,UserRepository<SQLUser>{
 
-    String USERS_BY_LOGIN_CACHE = "usersByLogin";
-
-    String USERS_BY_EMAIL_CACHE = "usersByEmail";
+  
 
     Optional<User> findOneByActivationKey(String activationKey);
     @Query("select u from User u where u.id = :i")
