@@ -12,6 +12,13 @@
 # Full reference is available at:
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
+#uua:
+#   mongo:
+#     enabled:false
+management:
+  health:
+    mongo:
+      enabled: false
 
 logging:
   level:
@@ -37,7 +44,7 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mariadb://localhost:3306/repos?useLegacyDatetimeCode=false&serverTimezone=UTC
-    username: root
+    username: mariauser
     password: 123456
     hikari:
       poolName: Hikari

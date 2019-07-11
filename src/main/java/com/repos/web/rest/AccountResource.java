@@ -76,6 +76,7 @@ public class AccountResource {
     @GetMapping("/activate")
     public void activateAccount(@RequestParam(value = "key") String key) {
         Optional<User> user = userService.activateRegistration(key);
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>User {}"+user.get());
         if (!user.isPresent()) {
             throw new AccountResourceException("No user was found for this activation key");
         }

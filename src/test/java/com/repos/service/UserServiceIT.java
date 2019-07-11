@@ -179,7 +179,7 @@ public class UserServiceIT {
         List<User> users = userRepository.findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(now.minus(3, ChronoUnit.DAYS));
         assertThat(users).isEmpty();
         userService.removeNotActivatedUsers();
-        Optional<User> maybeDbUser = userRepository.findById(dbUser.getId());
+        Optional<User> maybeDbUser = userRepository.findById(dbUser.getUuid());
         assertThat(maybeDbUser).contains(dbUser);
     }
 

@@ -43,7 +43,7 @@ public class UserMapper {
             return null;
         } else {
             User user = new User();
-            user.setId(userDTO.getId().toString());
+            user.setUuid(userDTO.getUuid());
             user.setLogin(userDTO.getLogin());
             user.setFirstName(userDTO.getFirstName());
             user.setLastName(userDTO.getLastName());
@@ -72,12 +72,12 @@ public class UserMapper {
         return authorities;
     }
 
-    public User userFromId(Long id) {
-        if (id == null) {
+    public User userFromId(String uuid) {
+        if (uuid == null) {
             return null;
         }
         User user = new User();
-        user.setId(id.toString());
+        user.setUuid(uuid);
         return user;
     }
 }

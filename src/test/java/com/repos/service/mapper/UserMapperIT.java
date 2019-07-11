@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UserMapperIT {
 
     private static final String DEFAULT_LOGIN = "johndoe";
-    private static final Long DEFAULT_ID = 1L;
+    private static final String DEFAULT_ID = "1";
 
     @Autowired
     private UserMapper userMapper;
@@ -137,7 +137,7 @@ public class UserMapperIT {
 
     @Test
     public void testUserFromId() {
-        assertThat(userMapper.userFromId(DEFAULT_ID).getId()).isEqualTo(DEFAULT_ID);
+        assertThat(userMapper.userFromId(DEFAULT_ID).getUuid()).isEqualTo(DEFAULT_ID);
         assertThat(userMapper.userFromId(null)).isNull();
     }
 }

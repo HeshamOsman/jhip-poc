@@ -9,6 +9,7 @@ import io.github.jhipster.domain.util.JSR310DateConverters.DateToZonedDateTimeCo
 import io.github.jhipster.domain.util.JSR310DateConverters.ZonedDateTimeToDateConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.context.annotation.Bean;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //@Profile("mongo")
-@Lazy
+@Lazy(true)
 @Configuration
 @EnableMongoRepositories("com.repos.repository.nosql")
 @Import(value = CustomMongoAutoConfiguration.class)
@@ -56,6 +57,7 @@ public class MongoDatabaseConfiguration {
     }
 
     @Bean
+    @Profile("mongo")
     public Mongobee mongobee(MongoClient mongoClient, MongoTemplate mongoTemplate, MongoProperties mongoProperties) {
         log.debug("Configuring Mongobee");
         Mongobee mongobee = new Mongobee(mongoClient);

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  */
 public class UserDTO {
 
-    private Long id;
+    private String uuid;
 
     @NotBlank
     @Pattern(regexp = Constants.LOGIN_REGEX)
@@ -59,7 +59,7 @@ public class UserDTO {
     }
 
     public UserDTO(User user) {
-        this.id = Long.parseLong(user.getId()) ;
+        this.uuid = user.getUuid() ;
         this.login = user.getLogin();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
@@ -76,19 +76,28 @@ public class UserDTO {
             .collect(Collectors.toSet());
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+//    public Long getId() {
+//        return id;
+//    }
+//
+//    public void setId(Long id) {
+//        this.id = id;
+//    }
+    
 
     public String getLogin() {
         return login;
     }
 
-    public void setLogin(String login) {
+    public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public void setLogin(String login) {
         this.login = login;
     }
 

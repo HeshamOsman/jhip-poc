@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,6 +23,7 @@ import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -29,17 +31,24 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.repos.config.Constants;
 //import com.repos.domain.sql.SQLUser;
 
-
+;
 @Entity
 @Table(name = "jhi_user")
 @org.springframework.data.mongodb.core.mapping.Document(collection = "jhi_user")
 public class User extends AbstractAuditingEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
+    
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    @org.springframework.data.annotation.Id
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "uuid", columnDefinition = "CHAR(90)")
+    private String uuid;
+    
     @NotNull
     @Pattern(regexp = Constants.LOGIN_REGEX)
     @Size(min = 1, max = 50)
@@ -103,7 +112,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @ManyToMany
     @JoinTable(
         name = "jhi_user_authority",
-        joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+        joinColumns = {@JoinColumn(name = "user_uuid", referencedColumnName = "uuid")},
         inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")})
 
     @BatchSize(size = 20)
@@ -113,19 +122,29 @@ public class User extends AbstractAuditingEntity implements Serializable {
 //        return id;
 //    }
     
-    public String getId() {
-        return id.toString();
-    }
+//    public String getId() {
+//        return id.toString();
+//    }
+//
+//    public void setId(String id) {
+//        this.id = Long.parseLong(id) ;
+//    }
 
-    public void setId(String id) {
-        this.id = Long.parseLong(id) ;
-    }
-
+    
+    
     public String getLogin() {
         return login;
     }
 
-    // Lowercase the login before saving it in database
+    public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	// Lowercase the login before saving it in database
     public void setLogin(String login) {
         this.login = StringUtils.lowerCase(login, Locale.ENGLISH);
     }
@@ -226,7 +245,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
         if (!(o instanceof User)) {
             return false;
         }
-        return id != null && id.equals(((User) o).id);
+        return uuid != null && uuid.equals(((User) o).uuid);
     }
 
     @Override

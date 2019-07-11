@@ -14,7 +14,7 @@
     -->
     <changeSet id="00000000000001" author="jhipster">
         <createTable tableName="jhi_user">
-            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+            <column name="uuid" type="char(90)" >
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="login" type="varchar(50)">
@@ -51,7 +51,7 @@
         </createTable>
 
         <createTable tableName="jhi_user_authority">
-            <column name="user_id" type="bigint">
+            <column name="user_uuid" type="char(90)">
                 <constraints nullable="false"/>
             </column>
             <column name="authority_name" type="varchar(50)">
@@ -59,7 +59,7 @@
             </column>
         </createTable>
 
-        <addPrimaryKey columnNames="user_id, authority_name" tableName="jhi_user_authority"/>
+        <addPrimaryKey columnNames="user_uuid, authority_name" tableName="jhi_user_authority"/>
 
         <addForeignKeyConstraint baseColumnNames="authority_name"
                                  baseTableName="jhi_user_authority"
@@ -67,10 +67,10 @@
                                  referencedColumnNames="name"
                                  referencedTableName="jhi_authority"/>
 
-        <addForeignKeyConstraint baseColumnNames="user_id"
+        <addForeignKeyConstraint baseColumnNames="user_uuid"
                                  baseTableName="jhi_user_authority"
                                  constraintName="fk_user_id"
-                                 referencedColumnNames="id"
+                                 referencedColumnNames="uuid"
                                  referencedTableName="jhi_user"/>
 
         <addNotNullConstraint   columnName="password_hash"
@@ -94,7 +94,7 @@
                   separator=";"
                   tableName="jhi_user_authority"/>
         <createTable tableName="jhi_persistent_audit_event">
-            <column name="event_id" type="bigint" autoIncrement="${autoIncrement}">
+            <column name="uuid" type="char(90)" >
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="principal" type="varchar(50)">
@@ -105,7 +105,7 @@
         </createTable>
 
         <createTable tableName="jhi_persistent_audit_evt_data">
-            <column name="event_id" type="bigint">
+            <column name="event_uuid" type="char(90)">
                 <constraints nullable="false"/>
             </column>
             <column name="name" type="varchar(150)">
@@ -113,7 +113,7 @@
             </column>
             <column name="value" type="varchar(255)"/>
         </createTable>
-        <addPrimaryKey columnNames="event_id, name" tableName="jhi_persistent_audit_evt_data"/>
+        <addPrimaryKey columnNames="event_uuid, name" tableName="jhi_persistent_audit_evt_data"/>
 
         <createIndex indexName="idx_persistent_audit_event"
                      tableName="jhi_persistent_audit_event"
@@ -125,13 +125,13 @@
         <createIndex indexName="idx_persistent_audit_evt_data"
                      tableName="jhi_persistent_audit_evt_data"
                      unique="false">
-            <column name="event_id" type="bigint"/>
+            <column name="event_uuid" type="bigint"/>
         </createIndex>
 
-        <addForeignKeyConstraint baseColumnNames="event_id"
+        <addForeignKeyConstraint baseColumnNames="event_uuid"
                                  baseTableName="jhi_persistent_audit_evt_data"
                                  constraintName="fk_evt_pers_audit_evt_data"
-                                 referencedColumnNames="event_id"
+                                 referencedColumnNames="uuid"
                                  referencedTableName="jhi_persistent_audit_event"/>
     </changeSet>
 

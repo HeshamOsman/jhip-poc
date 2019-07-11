@@ -31,8 +31,8 @@ public interface SQLUserRepository extends JpaRepository<User, String>,UserRepos
   
 
     Optional<User> findOneByActivationKey(String activationKey);
-    @Query("select u from User u where u.id = :i")
-    User toFindUserByHisIdentifier(@Param("i") Long i);
+    @Query("select u from User u where u.uuid = :i")
+    User toFindUserByHisIdentifier(@Param("i") String i);
    
     List<User> findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant dateTime);
 
@@ -44,7 +44,7 @@ public interface SQLUserRepository extends JpaRepository<User, String>,UserRepos
     Optional<User> findOneByLogin(String login);
 
     @EntityGraph(attributePaths = "authorities")
-    Optional<User> findOneWithAuthoritiesById(Long id);
+    Optional<User> findOneWithAuthoritiesByUuid(String id);
 
     @EntityGraph(attributePaths = "authorities")
     @Cacheable(cacheNames = USERS_BY_LOGIN_CACHE)
