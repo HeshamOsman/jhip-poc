@@ -9,6 +9,7 @@ import io.github.jhipster.domain.util.JSR310DateConverters.DateToZonedDateTimeCo
 import io.github.jhipster.domain.util.JSR310DateConverters.ZonedDateTimeToDateConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //@Profile("mongo")
-@Lazy(true)
+@Lazy(value= "${application.lazy}" =="true")//value= ApplicationProperties.Lazyness.lazy )
 @Configuration
 @EnableMongoRepositories("com.repos.repository.nosql")
 @Import(value = CustomMongoAutoConfiguration.class)
@@ -64,7 +65,7 @@ public class MongoDatabaseConfiguration {
         mongobee.setDbName(mongoProperties.getMongoClientDatabase());
         mongobee.setMongoTemplate(mongoTemplate);
         // package to scan for migrations
-        mongobee.setChangeLogsScanPackage("com.mongoapp.config.dbmigrations");
+        mongobee.setChangeLogsScanPackage("com.repos.config.mongo.migration");
         mongobee.setEnabled(true);
         return mongobee;
     }}

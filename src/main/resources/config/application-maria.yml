@@ -25,6 +25,7 @@ logging:
     ROOT: DEBUG
     io.github.jhipster: DEBUG
     com.repos: DEBUG
+    org.mongodb: ERROR
 
 spring:
   profiles:
@@ -136,4 +137,5 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:
+application:
+    lazy: true
