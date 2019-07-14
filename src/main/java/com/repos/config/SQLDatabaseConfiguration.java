@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.sql.SQLException;
 
-@Profile("maria")
+@Profile("!mongo")
 @Configuration
 @EnableJpaRepositories("com.repos.repository.sql")
 @EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware")

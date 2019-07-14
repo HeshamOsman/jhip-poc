@@ -17,7 +17,7 @@ import javax.sql.DataSource;
 import java.util.concurrent.Executor;
 
 @Configuration
-@Profile("maria")
+@Profile("!mongo")
 public class LiquibaseConfiguration {
 
     private final Logger log = LoggerFactory.getLogger(LiquibaseConfiguration.class);
